@@ -1,29 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-  {
-    id: 1,
-    nom: "Dupont",
-    prenom: "Jean",
-    dateNaissance: "1985-03-25",
-    telephone: "0612345678",
-    adresse: "12 rue de Paris, 75001 Paris",
-    email: "jean.dupont@example.com",
-    groupeSanguin: "A+",
-    allergies: "Penicilline",
-  },
-  {
-    id: 2,
-    nom: "Martin",
-    prenom: "Claire",
-    dateNaissance: "1992-11-15",
-    telephone: "0698765432",
-    adresse: "34 avenue Lyon, 69000 Lyon",
-    email: "claire.martin@example.com",
-    groupeSanguin: "O-",
-    allergies: "Aucune",
-  },
-];
+const initialState = [];
 
 const patientsSlice = createSlice({
   name: "patients",
