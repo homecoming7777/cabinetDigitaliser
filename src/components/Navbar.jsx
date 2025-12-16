@@ -15,7 +15,7 @@ export default function Navbar() {
 
   const linkClass = ({ isActive }) =>
     `${baseLink} ${isActive ? activeLink : inactiveLink}`;
-  
+
   return (
     <nav className="relative bg-[#19464c] py-1 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -24,7 +24,7 @@ export default function Navbar() {
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <button
               onClick={() => setOpen(!open)}
-              className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 text-2xl hover:bg-[#C7DAD3] hover:text-white"
+              className="inline-flex items-center justify-center rounded-md p-2 text-gray-200 text-2xl hover:bg-[#C7DAD3] hover:text-white"
             >
               {open ? "✖" : "☰"}
             </button>
