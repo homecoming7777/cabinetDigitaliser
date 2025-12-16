@@ -63,7 +63,7 @@ export default function Navbar() {
       {open && (
         <div className="sm:hidden px-2 pt-2 pb-3 space-y-1">
           <NavLink to="/" end className={linkClass} onClick={() => setOpen(false)}>
-            Dashboard
+            Accueil
           </NavLink>
           <NavLink to="/patients" className={linkClass} onClick={() => setOpen(false)}>
             Patients
