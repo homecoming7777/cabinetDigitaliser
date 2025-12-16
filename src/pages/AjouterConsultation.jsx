@@ -34,7 +34,7 @@ export default function AjouterConsultation() {
         <div className="p-0.5 w-100 flex justify-self-center bg-gradient-to-r from-transparent via-[#3894A1] to-transparent"></div>
 
     <div className="max-w-5xl mx-auto mt-10 px-4">
-    <form onSubmit={submit} className="bg-[#2f404f] mb-10 mt-10 rounded-lg p-6 space-y-4 shadow-2xl">
+    <form onSubmit={submit} className="bg-[#2f404f9d] mb-10 mt-10 rounded-lg p-6 space-y-4 shadow-2xl">
 
       <input required className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white" name="patient" placeholder="Patient" onChange={handleChange} />
       <input required className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white" type="date" name="date" onChange={handleChange} />

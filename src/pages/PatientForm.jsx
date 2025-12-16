@@ -49,14 +49,14 @@ export default function PatientForm() {
       <Navbar />
 
       <div className="max-w-5xl mx-auto mt-10 px-4">
-        <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2F404F]">
+        <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2f404f]">
           {existingPatient ? "Modifier le patient" : "Ajouter un patient"}
         </h1>
         <div className="p-0.5 w-100 flex justify-self-center bg-gradient-to-r from-transparent via-[#3894A1] to-transparent"></div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-[#2f404fcc] mb-10 mt-10 rounded-lg p-6 space-y-4 shadow-2xl"
+          className="bg-[#2f404f9d] mb-10 mt-10 rounded-lg p-6 space-y-4 shadow-2xl"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
@@ -80,6 +80,8 @@ export default function PatientForm() {
               required
             />
 
+<div>
+            <label htmlFor="" className="text-white">Date de naissance:</label>
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               type="date"
@@ -88,7 +90,8 @@ export default function PatientForm() {
               onChange={handleChange}
               required
               placeholder="Date denaissance"
-            />
+              />
+              </div>
 
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
