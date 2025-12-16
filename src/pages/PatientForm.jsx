@@ -87,6 +87,7 @@ export default function PatientForm() {
               value={patient.dateNaissance}
               onChange={handleChange}
               required
+              placeholder="Date denaissance"
             />
 
             <input
