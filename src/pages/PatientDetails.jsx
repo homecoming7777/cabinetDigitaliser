@@ -1,6 +1,14 @@
 import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { calculateAge } from "../calculateAge";
+import {
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaTint,
+  FaExclamationTriangle,
+  FaUserMd,
+} from "react-icons/fa";
 
 export default function PatientDetails() {
   const { id } = useParams();
@@ -8,18 +16,44 @@ export default function PatientDetails() {
     state.patients.find(p => p.id === parseInt(id))
   );
 
-  if (!patient) return <p>Patient non trouvé</p>;
-
   return (
-    <div>
-      <h1>Dossier de {patient.nom} {patient.prenom}</h1>
-      <p>Age: {calculateAge(patient.dateNaissance)}</p>
-      <p>Téléphone: {patient.telephone}</p>
-      <p>Adresse: {patient.adresse}</p>
-      <p>Email: {patient.email}</p>
-      <p>Groupe sanguin: {patient.groupeSanguin}</p>
-      <p>Allergies: {patient.allergies}</p>
-      <Link to={`/patients/ajouter?id=${patient.id}`}>Modifier</Link>
+    <div className="max-w-xl mx-auto mt-10 p-6 rounded-2xl shadow-xl hover:shadow-2xl">
+      
+      <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-4 rounded-xl mb-6 text-white text-center shadow-md flex items-center justify-center gap-2">
+        <FaUserMd className="text-white text-2xl" />
+        <h1 className="text-3xl font-bold">Dossier Médical</h1>
+      </div>
+
+      <div className="space-y-3 text-gray-800">
+        <p className="flex items-center gap-2 font-semibold">
+          <span className="font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded-full shadow-sm">
+            Age
+          </span> 
+          {calculateAge(patient.dateNaissance)} ans
+        </p>
+        <p className="flex items-center gap-2 font-semibold">
+          <FaPhone className="text-blue-500" /> {patient.telephone}
+        </p>
+        <p className="flex items-center gap-2 font-semibold">
+          <FaMapMarkerAlt className="text-blue-500" /> {patient.adresse}
+        </p>
+        <p className="flex items-center gap-2 font-semibold">
+          <FaEnvelope className="text-blue-500" /> {patient.email}
+        </p>
+        <p className="flex items-center gap-2 font-semibold">
+          <FaTint className="text-red-500" /> Groupe sanguin: {patient.groupeSanguin}
+        </p>
+        <p className="flex items-center gap-2 font-semibold">
+          <FaExclamationTriangle className="text-yellow-500" /> Allergies: {patient.allergies}
+        </p>
+      </div>
+
+      <Link
+        to={`/patients/ajouter?id=${patient.id}`}
+        className="mt-6 inline-block w-full text-center px-6 py-3 bg-gradient-to-r from-green-400 to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:from-green-500 hover:to-teal-600 transition-all duration-300"
+      >
+        Modifier
+      </Link>
     </div>
   );
 }
