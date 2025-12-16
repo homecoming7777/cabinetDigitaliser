@@ -21,7 +21,7 @@ export default function LandingPage() {
       <section className="bg-[#F0F1EE] px-8 py-10 flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mt-10 md:mt-0">
           <img data-aos="fade-up"
-            src="public/WhatsApp Image 2025-12-11 at 23.31.42.jpeg"
+            src="https://images.unsplash.com/photo-1674702727317-d29b2788dc4a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVkaWNhbCUyMHdhbGxwYXBlcnxlbnwwfHwwfHx8MA%3D%3D"
             alt="doctor"
             className="rounded-xl shadow-lg"
           />
