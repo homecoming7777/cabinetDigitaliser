@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useEffect } from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 
 
 export default function LandingPage() {
@@ -35,9 +35,9 @@ export default function LandingPage() {
           </p>
 
           <div className="mt-6 flex justify-center gap-4">
-            <button data-aos="fade-right" className="bg-[#2F404F] text-white px-6 py-3 hover:text-[#2F404F] hover:bg-white rounded-lg">
+            <Link to="/rendez-vous" data-aos="fade-right" className="bg-[#2F404F] text-white px-6 py-3 hover:text-[#2F404F] hover:bg-white rounded-lg">
               Prendre Rendez-vous
-            </button>
+            </Link>
             <Link to="/Dashboard">
             <button data-aos="fade-left" className="border border-[#2F404F] text-[#2F404F] hover:text-white hover:bg-[#2F404F] px-6 py-3 rounded-lg">
               Voir tableau de bord
@@ -186,8 +186,10 @@ export default function LandingPage() {
       <section className="bg-[#3894A1] text-white px-8 py-16 text-center">
         <h2 className="text-3xl font-bold">Prenez Votre Rendez-vous</h2>
         <p className="mt-2">Évitez l’attente, réservez en ligne en quelques clics.</p>
+        <Link to="/rendez-vous">
         <button className="mt-4 relative h-12 overflow-hidden rounded bg-blue-950 px-5 py-2.5 text-white transition-all duration-300 hover:bg-neutral-800 hover:ring-2 hover:ring-neutral-800 hover:ring-offset-2"><span class="relative">Réserver Maintenant</span>
         </button>
+        </Link>
       </section>
 
       <footer className="bg-gray-900 text-gray-300 px-8 py-12">

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import { calculateAge } from "./calculateAge";
+import { calculateAge } from "../calculateAge";
 
 export default function PatientDetails() {
   const { id } = useParams();

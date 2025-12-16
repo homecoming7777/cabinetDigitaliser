@@ -15,9 +15,9 @@ export default function Navbar() {
 
   const linkClass = ({ isActive }) =>
     `${baseLink} ${isActive ? activeLink : inactiveLink}`;
-
+  
   return (
-    <nav className="relative bg-[#3894A1] py-1 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+    <nav className="relative bg-[#19464c] py-1 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
 
