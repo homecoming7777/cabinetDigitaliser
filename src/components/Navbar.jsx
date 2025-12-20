@@ -77,6 +77,9 @@ export default function Navbar() {
           <NavLink to="/rendez-vous" className={linkClass} onClick={() => setOpen(false)}>
             Rendez-vous
           </NavLink>
+          <NavLink to="/Dashboard" className={linkClass} onClick={() => setOpen(false)}>
+            Dashboard
+          </NavLink>
         </div>
       )}
     </nav>
