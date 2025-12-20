@@ -23,6 +23,14 @@ export default function Consultations() {
       </h1>
 
       <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
+      <div className="flex justify-center mt-8">
+        <Link
+          to="/consultations/ajouter"
+          className="mb-10 inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition hover:scale-105"
+        >
+          + Ajouter une consultation
+        </Link>
+      </div>
 
       {/* Table */}
       <div className="max-w-6xl mx-auto mt-10 px-4 overflow-x-auto">
@@ -65,14 +73,6 @@ export default function Consultations() {
       </div>
 
       {/* Add button */}
-      <div className="flex justify-center mt-8">
-        <Link
-          to="/consultations/ajouter"
-          className="mb-10 inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition hover:scale-105"
-        >
-          + Ajouter une consultation
-        </Link>
-      </div>
     </div>
   );
 }

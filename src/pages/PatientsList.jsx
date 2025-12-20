@@ -84,6 +84,14 @@ export default function PatientsList() {
             <option value="60+">60+</option>
           </select>
         </div>
+        <div className="flex justify-center mt-10 mb-10">
+          <Link
+            to="/patients/ajouter"
+            className="bg-[#2F404F] text-white px-6 py-3 rounded hover:scale-105 transition"
+          >
+            Ajouter un patient
+          </Link>
+        </div>
 
         <div className="overflow-x-auto mt-10">
           {filteredPatients.length > 0 ? (
@@ -131,14 +139,6 @@ export default function PatientsList() {
           )}
         </div>
 
-        <div className="flex justify-center mt-10 mb-10">
-          <Link
-            to="/patients/ajouter"
-            className="bg-[#2F404F] text-white px-6 py-3 rounded hover:scale-105 transition"
-          >
-            Ajouter un patient
-          </Link>
-        </div>
       </div>
     </>
   );
