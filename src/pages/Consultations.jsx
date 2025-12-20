@@ -4,40 +4,74 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 export default function Consultations() {
-  const consultations = useSelector(state => state.consultations.list);
+  const consultations = useSelector((state) => state.consultations.list);
+  const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
+
+  // Resolve patient name from patient ID
+  const getPatientName = (patientId) => {
+    const patient = patients.find((p) => p.id === patientId);
+    return patient ? `${patient.nom} ${patient.prenom}` : "Patient inconnu";
+  };
 
   return (
     <div>
       <Navbar />
-      <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2F404F]">Liste des Consultations</h1>
-      
-        <div className="p-0.5 w-100 flex justify-self-center bg-gradient-to-r from-transparent via-[#3894A1] to-transparent"></div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {consultations.map(c => (
-      <ul className="justify-self-center w-70 lg:w-100 mt-10 p-3 rounded bg-white">
-          <li key={c.id}>
-            <h1 className="text-center font-bold">
-            {c.date}  
-            </h1>
-            <h1 className="text-center font-bold">
-            {c.patientId}
-            </h1>
-            <h1 className="text-center font-bold">
-            {c.diagnostic}
-            </h1>
-            <button className="flex justify-self-center bg-red-600 text-white mt-5 py-1 px-4 rounded" onClick={() => dispatch(deleteConsultation(c.id))}>
-              Supprimer
-            </button>
-          </li>
-      </ul>
-        ))}
-        </div>
-      <div className="flex justify-center mt-5">
-      <Link className="mb-10 inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition active:scale-110 " to="/consultations/ajouter">
-        + Ajouter une consultation
-      </Link>
+      <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2F404F]">
+        Liste des Consultations
+      </h1>
+
+      <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
+
+      {/* Table */}
+      <div className="max-w-6xl mx-auto mt-10 px-4 overflow-x-auto">
+        <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
+          <thead className="bg-[#2F404F] text-white">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Patient</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Diagnostic</th>
+              <th className="px-6 py-3 text-center text-sm font-semibold">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {consultations.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-6 text-gray-500">
+                  Aucune consultation trouvée
+                </td>
+              </tr>
+            )}
+
+            {consultations.map((c) => (
+              <tr key={c.id} className="border-b hover:bg-gray-50 transition">
+                <td className="px-6 py-4 font-medium">{c.date}</td>
+                <td className="px-6 py-4">{getPatientName(c.patient)}</td>
+                <td className="px-6 py-4">{c.diagnostic}</td>
+                <td className="px-6 py-4 text-center">
+                  <button
+                    onClick={() => dispatch(deleteConsultation(c.id))}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded transition"
+                  >
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Add button */}
+      <div className="flex justify-center mt-8">
+        <Link
+          to="/consultations/ajouter"
+          className="mb-10 inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition hover:scale-105"
+        >
+          + Ajouter une consultation
+        </Link>
       </div>
     </div>
   );

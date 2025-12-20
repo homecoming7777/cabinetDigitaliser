@@ -1,74 +1,187 @@
-import React from "react";
+import Navbar from '../components/Navbar'
 import { useSelector } from "react-redux";
-import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
-import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { parseISO, isSameMonth, format } from "date-fns";
+import {
+  FaUsers,
+  FaMoneyBillWave,
+  FaStethoscope,
+  FaChartLine,
+  FaUserCheck,
+} from "react-icons/fa";
 
 export default function Dashboard() {
   const patients = useSelector((state) => state.patients);
-  const rdvs = useSelector((state) => state.rdv.list);
   const consultations = useSelector((state) => state.consultations.list);
 
   const today = new Date();
 
-  // --- Revenue calculations ---
-  const todayRevenue = consultations
-    .filter((c) => isSameDay(parseISO(c.date), today))
-    .reduce((sum, c) => sum + c.prix, 0);
-
-  const monthRevenue = consultations
-    .filter((c) => isSameMonth(parseISO(c.date), today))
-    .reduce((sum, c) => sum + c.prix, 0);
-
-  // --- Consultation counts ---
-  const todayConsultations = consultations.filter((c) =>
-    isSameDay(parseISO(c.date), today)
-  ).length;
-
+  /* =======================
+     MONTH DATA
+  ======================= */
   const monthConsultations = consultations.filter((c) =>
     isSameMonth(parseISO(c.date), today)
-  ).length;
+  );
 
-  // --- Appointments ---
-  const honoredAppointments = rdvs.filter((r) => r.status === "honored").length;
-  const missedAppointments = rdvs.filter((r) => r.status === "missed").length;
+  const monthRevenue = monthConsultations.reduce(
+    (sum, c) => sum + Number(c.prix || 0),
+    0
+  );
+
+  const avgRevenue =
+    monthConsultations.length > 0
+      ? Math.round(monthRevenue / monthConsultations.length)
+      : 0;
+
+  /* =======================
+     MOST FREQUENT PATIENT
+  ======================= */
+  const consultationCount = {};
+
+  monthConsultations.forEach((c) => {
+    consultationCount[c.patient] =
+      (consultationCount[c.patient] || 0) + 1;
+  });
+
+  const mostFrequentPatientId =
+    Object.keys(consultationCount).length > 0
+      ? Object.keys(consultationCount).reduce((a, b) =>
+          consultationCount[a] > consultationCount[b] ? a : b
+        )
+      : null;
+
+  const mostFrequentPatient = patients.find(
+    (p) => p.id == mostFrequentPatientId
+  );
+
+  /* =======================
+     CHART DATA
+  ======================= */
+  const revenueTimeline = monthConsultations.map((c) => ({
+    date: format(parseISO(c.date), "dd MMM"),
+    revenue: Number(c.prix || 0),
+  }));
+
+  /* =======================
+     STYLES
+  ======================= */
+  const card =
+    "relative bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all";
 
   return (
     <>
-      <Navbar></Navbar>
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+    <Navbar />
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 p-6">
+      {/* TITLE */}
+      <motion.h1
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl font-extrabold text-slate-800 mb-10"
+      >
+        Clinic Performance Dashboard
+      </motion.h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Total Patients</h2>
-          <p className="text-2xl">{patients.length}</p>
-        </div>
+      {/* KPI CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <FaUsers className="text-blue-500 text-4xl mb-3" />
+          <p className="text-sm text-gray-500">Total Patients</p>
+          <p className="text-3xl font-bold">{patients.length}</p>
+        </motion.div>
 
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Consultations Today</h2>
-          <p className="text-2xl">{todayConsultations}</p>
-          <p className="text-sm text-gray-500">Revenue: ${todayRevenue}</p>
-        </div>
+        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <FaStethoscope className="text-purple-500 text-4xl mb-3" />
+          <p className="text-sm text-gray-500">Consultations (Month)</p>
+          <p className="text-3xl font-bold">
+            {monthConsultations.length}
+          </p>
+        </motion.div>
 
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Consultations This Month</h2>
-          <p className="text-2xl">{monthConsultations}</p>
-          <p className="text-sm text-gray-500">Revenue: ${Number(monthRevenue)}</p>
-        </div>
+        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <FaMoneyBillWave className="text-emerald-500 text-4xl mb-3" />
+          <p className="text-sm text-gray-500">Monthly Revenue</p>
+          <p className="text-3xl font-bold">
+            {monthRevenue} MAD
+          </p>
+        </motion.div>
+
+        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <FaChartLine className="text-orange-500 text-4xl mb-3" />
+          <p className="text-sm text-gray-500">Avg / Consultation</p>
+          <p className="text-3xl font-bold">
+            {avgRevenue} MAD
+          </p>
+        </motion.div>
+
+        {/* MOST FREQUENT PATIENT */}
+        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <FaUserCheck className="text-pink-500 text-4xl mb-3" />
+          <p className="text-sm text-gray-500">Most Frequent Patient</p>
+
+          {mostFrequentPatient ? (
+            <>
+              <p className="text-lg font-bold text-slate-800">
+                {mostFrequentPatient.nom}{" "}
+                {mostFrequentPatient.prenom}
+              </p>
+              <p className="text-sm text-gray-500">
+                {consultationCount[mostFrequentPatientId]} consultations
+              </p>
+            </>
+          ) : (
+            <p className="text-gray-400">No data</p>
+          )}
+        </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Honored Appointments</h2>
-          <p className="text-2xl">{honoredAppointments}</p>
-        </div>
+      {/* REVENUE CHART */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-2xl p-6 shadow-lg"
+      >
+        <h2 className="text-xl font-semibold mb-4">
+          Revenue Trend (This Month)
+        </h2>
 
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-2">Missed Appointments</h2>
-          <p className="text-2xl">{missedAppointments}</p>
-        </div>
-      </div>
+        <ResponsiveContainer width="100%" height={320}>
+          <AreaChart data={revenueTimeline}>
+            <defs>
+              <linearGradient
+                id="revenueGradient"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="revenue"
+              stroke="#10b981"
+              fill="url(#revenueGradient)"
+              strokeWidth={3}
+              animationDuration={1200}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </motion.div>
     </div>
-    </>
+        </>
   );
 }
