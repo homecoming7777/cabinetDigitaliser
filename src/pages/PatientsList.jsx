@@ -4,59 +4,142 @@ import { useState } from "react";
 import { deletePatient } from "../patientsSlice";
 import { calculateAge } from "../calculateAge";
 import Navbar from "../components/Navbar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-
 
 export default function PatientsList() {
-  const patients = useSelector(state => state.patients);
-  const dispatch = useDispatch();
-  const [search, setSearch] = useState("");
-
-  const filteredPatients = patients.filter(p =>
-    `${p.nom} ${p.prenom}`.toLowerCase().includes(search.toLowerCase())
+  const patients = useSelector(state =>
+    Array.isArray(state.patients) ? state.patients : []
   );
+  const dispatch = useDispatch();
+
+ 
+  const [search, setSearch] = useState("");
+  const [groupe, setGroupe] = useState("");
+  const [ageRange, setAgeRange] = useState("");
+
+  const filteredPatients = patients.filter(p => {
+    const age = calculateAge(p.dateNaissance);
+
+    const matchSearch =
+      `${p.nom} ${p.prenom}`.toLowerCase().includes(search.toLowerCase());
+
+    const matchGroupe =
+      !groupe || p.groupeSanguin === groupe;
+
+    const matchAge =
+      !ageRange ||
+      (ageRange === "0-18" && age <= 18) ||
+      (ageRange === "19-40" && age >= 19 && age <= 40) ||
+      (ageRange === "41-60" && age >= 41 && age <= 60) ||
+      (ageRange === "60+" && age > 60);
+
+    return matchSearch && matchGroupe && matchAge;
+  });
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2F404F]">Annuaire des patients</h1>
-      <div className="p-0.5 w-100 flex justify-self-center bg-gradient-to-r from-transparent via-[#3894A1] to-transparent"></div>
 
-      <div className="mt-10 lg:mt-10 p-2 border-2 border-[#C7DAD3] rounded w-70 sm:w-100 md:w-120 flex justify-self-center ">
-        <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" className="outline-0 font-semibold text-xl text-[#2F404F] w-full" placeholder="Rechercher un patient..." required />
-      </div>
+      <div className="px-4">
+        <h1 className="text-center text-3xl md:text-5xl mt-6 font-extrabold text-[#2F404F]">
+          Annuaire des patients
+        </h1>
 
-      <ul className="mt-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        {filteredPatients.length > 0 ? (
-          filteredPatients.map(p => (
-            <div className="w-70 justify-self-center rounded bg-white shadow-xl mb-5 p-2">
-              <li className="text-center" key={p.id}>
-                <Link className="text-2xl capitalize font-semibold" to={`/patients/${p.id}`}>
-                  {p.nom} {p.prenom}
-                </Link>
-                <h1 className="mt-5 text-gray-500">{calculateAge(p.dateNaissance)} ans</h1>
-                <button
-                  className="mt-5"
-                  onClick={() => dispatch(deletePatient(p.id))}
-                >
-                  <FontAwesomeIcon icon={faXmark} className="text-red-500 text-2xl font-semibold" />
-                </button>
-              </li>
-            </div>
-          ))
-        ) : (
-          <div className="flex justify-center md:ml-100 lg:ml-160">
-            <p className="mt-5 flex text-gray-300 text-3xl md:text-4xl lg:text-5xl font-extrabold mb-10">Aucun patient trouvé</p>
-          </div>
-        )}
-      </ul>
+        <div className="mt-2 h-1 w-40 mx-auto bg-gradient-to-r from-transparent via-[#3894A1] to-transparent" />
 
-      <div className="flex justify-center mt-5">
-        <div className="mb-10 inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition active:scale-110 ">
-          <Link to="/patients/ajouter">Ajouter un patient</Link>
+        <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <input
+            type="text"
+            placeholder="Nom / Prénom"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="border rounded px-4 py-2 outline-none"
+          />
+
+          <select
+            value={groupe}
+            onChange={e => setGroupe(e.target.value)}
+            className="border rounded px-4 py-2"
+          >
+            <option value="">Tous les groupes</option>
+            <option>A+</option>
+            <option>A-</option>
+            <option>B+</option>
+            <option>B-</option>
+            <option>AB+</option>
+            <option>AB-</option>
+            <option>O+</option>
+            <option>O-</option>
+          </select>
+
+          <select
+            value={ageRange}
+            onChange={e => setAgeRange(e.target.value)}
+            className="border rounded px-4 py-2"
+          >
+            <option value="">Tous les âges</option>
+            <option value="0-18">0 – 18</option>
+            <option value="19-40">19 – 40</option>
+            <option value="41-60">41 – 60</option>
+            <option value="60+">60+</option>
+          </select>
+        </div>
+
+        <div className="overflow-x-auto mt-10">
+          {filteredPatients.length > 0 ? (
+            <table className="w-full max-w-6xl mx-auto border shadow">
+              <thead className="bg-[#2F404F] text-white">
+                <tr>
+                  <th className="p-3 text-left">Nom</th>
+                  <th className="p-3">Âge</th>
+                  <th className="p-3">Téléphone</th>
+                  <th className="p-3">Email</th>
+                  <th className="p-3">Groupe</th>
+                  <th className="p-3 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPatients.map(p => (
+                  <tr key={p.id} className="border-t hover:bg-gray-50">
+                    <td className="p-3 font-semibold">
+                      <Link to={`/patients/${p.id}`} className="hover:underline">
+                        {p.nom} {p.prenom}
+                      </Link>
+                    </td>
+                    <td className="p-3 text-center">
+                      {calculateAge(p.dateNaissance)} ans
+                    </td>
+                    <td className="p-3 text-center">{p.telephone}</td>
+                    <td className="p-3 text-center">{p.email}</td>
+                    <td className="p-3 text-center">{p.groupeSanguin}</td>
+                    <td className="p-3 text-center">
+                      <button
+                        onClick={() => dispatch(deletePatient(p.id))}
+                        className="text-white bg-red-500 px-3 rounded font-bold py-2 hover:scale-105"
+                      >
+                        supprimer
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-center mt-10 text-gray-400 text-3xl font-bold">
+              Aucun patient trouvé
+            </p>
+          )}
+        </div>
+
+        <div className="flex justify-center mt-10 mb-10">
+          <Link
+            to="/patients/ajouter"
+            className="bg-[#2F404F] text-white px-6 py-3 rounded hover:scale-105 transition"
+          >
+            Ajouter un patient
+          </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 }

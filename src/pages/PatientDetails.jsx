@@ -10,6 +10,10 @@ import {
   FaUserMd,
 } from "react-icons/fa";
 
+import Navbar from "../components/Navbar";
+
+
+
 export default function PatientDetails() {
   const { id } = useParams();
   const patient = useSelector(state =>
@@ -17,6 +21,9 @@ export default function PatientDetails() {
   );
 
   return (
+    <>
+
+      <Navbar />
     <div className="max-w-xl mx-auto mt-10 p-6 rounded-2xl shadow-xl hover:shadow-2xl">
       
       <div className="bg-gradient-to-r from-[#3894A1] to-[#2F404F] p-4 rounded-xl mb-6 text-white text-center shadow-md flex items-center justify-center gap-2">
@@ -51,9 +58,10 @@ export default function PatientDetails() {
       <Link
         to={`/patients/ajouter?id=${patient.id}`}
         className="mt-6 inline-block w-full text-center px-6 py-3 bg-gradient-to-r from-[#C7DAD3] to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:from-green-500 hover:to-teal-600 transition-all duration-300"
-      >
+        >
         Modifier
       </Link>
     </div>
+        </>
   );
 }
