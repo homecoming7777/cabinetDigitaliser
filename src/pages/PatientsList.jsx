@@ -44,7 +44,7 @@ export default function PatientsList() {
           Annuaire des patients
         </h1>
 
-        <div className="mt-2 h-1 w-40 mx-auto bg-gradient-to-r from-transparent via-[#3894A1] to-transparent" />
+        <div className="mt-2 h-1 w-100 mx-auto bg-gradient-to-r from-transparent via-[#3894A1] to-transparent" />
 
         <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
 

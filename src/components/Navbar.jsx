@@ -46,6 +46,9 @@ export default function Navbar() {
                 <NavLink to="/rendez-vous" className={linkClass}>
                   Rendez-vous
                 </NavLink>
+                <NavLink to="/Dashboard" className={linkClass}>
+                  Dashboard
+                </NavLink>
               </div>
             </div>
           </div>

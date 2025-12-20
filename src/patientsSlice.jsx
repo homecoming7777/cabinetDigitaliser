@@ -13,9 +13,7 @@ const patientsSlice = createSlice({
       const index = state.findIndex(p => p.id === action.payload.id);
       if (index !== -1) state[index] = action.payload;
     },
-    deletePatient: (state, action) => {
-      return state.filter(p => p.id !== action.payload);
-    },
+    deletePatient: (state, action) => state.filter(p => p.id !== action.payload),
   },
 });
 
