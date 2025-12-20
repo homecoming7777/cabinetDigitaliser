@@ -1,6 +1,9 @@
 import Navbar from '../components/Navbar'
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from 'react';
 import {
   AreaChart,
   Area,
@@ -19,6 +22,14 @@ import {
 } from "react-icons/fa";
 
 export default function Dashboard() {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }, []);
+
   const patients = useSelector((state) => state.patients);
   const consultations = useSelector((state) => state.consultations.list);
 
@@ -90,14 +101,14 @@ export default function Dashboard() {
       </motion.h1>
 
       {/* KPI CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+      <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
         <motion.div whileHover={{ scale: 1.05 }} className={card}>
           <FaUsers className="text-blue-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Total Patients</p>
           <p className="text-3xl font-bold">{patients.length}</p>
         </motion.div>
 
-        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+        <motion.div data-aos="fade-up" whileHover={{ scale: 1.05 }} className={card}>
           <FaStethoscope className="text-purple-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Consultations (Month)</p>
           <p className="text-3xl font-bold">
@@ -105,7 +116,7 @@ export default function Dashboard() {
           </p>
         </motion.div>
 
-        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+        <motion.div data-aos="fade-up" whileHover={{ scale: 1.05 }} className={card}>
           <FaMoneyBillWave className="text-emerald-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Monthly Revenue</p>
           <p className="text-3xl font-bold">
@@ -113,7 +124,7 @@ export default function Dashboard() {
           </p>
         </motion.div>
 
-        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+        <motion.div data-aos="fade-up" whileHover={{ scale: 1.05 }} className={card}>
           <FaChartLine className="text-orange-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Avg / Consultation</p>
           <p className="text-3xl font-bold">
@@ -122,7 +133,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* MOST FREQUENT PATIENT */}
-        <motion.div whileHover={{ scale: 1.05 }} className={card}>
+        <motion.div data-aos="fade-up" whileHover={{ scale: 1.05 }} className={card}>
           <FaUserCheck className="text-pink-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Most Frequent Patient</p>
 
@@ -143,7 +154,7 @@ export default function Dashboard() {
       </div>
 
       {/* REVENUE CHART */}
-      <motion.div
+      <motion.div data-aos="fade-up"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl p-6 shadow-lg"
