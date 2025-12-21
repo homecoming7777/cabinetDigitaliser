@@ -50,7 +50,7 @@ export default function RendezVous() {
 
 
       {/* Filters */}
-      <div className="max-w-6xl mx-auto mt-6 px-4 grid grid-cols-1 md:grid-cols-4">
+      <div className="max-w-6xl mx-auto mt-6 px-4 grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4">
       <div className="flex justify-center mt-8 gap-4 flex-wrap">
         <Link
           to="/rendez-vous/ajouter"
