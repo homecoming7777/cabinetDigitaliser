@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPatient, updatePatient } from "../patientsSlice";
+import { addPatient, updatePatient } from "../Slices/patientsSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -11,8 +11,8 @@ export default function PatientForm() {
   const params = new URLSearchParams(location.search);
   const editId = params.get("id");
 
-  const existingPatient = useSelector(state =>
-    state.patients.find(p => p.id === parseInt(editId))
+  const existingPatient = useSelector((state) =>
+    state.patients.find((p) => p.id === parseInt(editId))
   );
 
   const [patient, setPatient] = useState({
@@ -30,11 +30,11 @@ export default function PatientForm() {
     if (existingPatient) setPatient(existingPatient);
   }, [existingPatient]);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setPatient({ ...patient, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (existingPatient) {
       dispatch(updatePatient(patient));
@@ -52,6 +52,7 @@ export default function PatientForm() {
         <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2f404f]">
           {existingPatient ? "Modifier le patient" : "Ajouter un patient"}
         </h1>
+
         <div className="p-0.5 w-100 flex justify-self-center bg-gradient-to-r from-transparent via-[#3894A1] to-transparent"></div>
 
         <form
@@ -60,48 +61,55 @@ export default function PatientForm() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
+            {/* Nom */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
-              pattern="^[A-Za-z]+$"
               name="nom"
               placeholder="Nom"
               value={patient.nom}
               onChange={handleChange}
+              pattern="^[A-Za-zÀ-ÿ\s]+$"
+              title="Le nom doit contenir uniquement des lettres"
               required
             />
 
+            {/* Prénom */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
-              pattern="^[A-Za-z]+$"
               name="prenom"
               placeholder="Prénom"
               value={patient.prenom}
               onChange={handleChange}
+              pattern="^[A-Za-zÀ-ÿ\s]+$"
+              title="Le prénom doit contenir uniquement des lettres"
               required
             />
 
-<div>
-            <label htmlFor="" className="text-white">Date de naissance:</label>
-            <input
-              className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
-              type="date"
-              name="dateNaissance"
-              value={patient.dateNaissance}
-              onChange={handleChange}
-              required
-              placeholder="Date denaissance"
+            {/* Date de naissance */}
+            <div>
+              <label className="text-white">Date de naissance:</label>
+              <input
+                type="date"
+                className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
+                name="dateNaissance"
+                value={patient.dateNaissance}
+                onChange={handleChange}
+                required
               />
-              </div>
+            </div>
 
+            {/* Téléphone */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
-              pattern="^[0-9]+$"
               name="telephone"
               placeholder="Téléphone"
               value={patient.telephone}
               onChange={handleChange}
+              pattern="^[0-9]{10,}$"
+              title="Le numéro doit contenir au moins 10 chiffres"
             />
 
+            {/* Adresse */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="adresse"
@@ -110,23 +118,29 @@ export default function PatientForm() {
               onChange={handleChange}
             />
 
+            {/* Email */}
             <input
-              className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               type="email"
+              className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="email"
               placeholder="Email"
               value={patient.email}
               onChange={handleChange}
+              title="Veuillez entrer une adresse email valide"
             />
 
+            {/* Groupe sanguin */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="groupeSanguin"
-              placeholder="Groupe sanguin"
+              placeholder="Groupe sanguin (A+, O-, AB+)"
               value={patient.groupeSanguin}
               onChange={handleChange}
+              pattern="^(A|B|AB|O)[+-]$"
+              title="Exemples valides : A+, O-, AB+"
             />
 
+            {/* Allergies */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="allergies"

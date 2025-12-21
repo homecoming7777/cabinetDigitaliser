@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addConsultation } from "../ConsultationSlice";
+import { addConsultation } from "../Slices/ConsultationSlice";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -24,7 +24,6 @@ export default function AjouterConsultation() {
   const submit = (e) => {
     e.preventDefault();
 
-    // Save patient as ID and prix as number
     dispatch(
       addConsultation({
         ...form,
@@ -51,16 +50,16 @@ export default function AjouterConsultation() {
           onSubmit={submit}
           className="bg-[#2f404f9d] rounded-lg p-6 space-y-5 shadow-2xl"
         >
-          {/* Patient select */}
+          {/* Patient */}
           <select
             required
             name="patient"
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           >
-            <option value="">Select Patient</option>
+            <option className="text-black" value="">Sélectionner un patient</option>
             {patients.map((p) => (
-              <option key={p.id} value={p.id}>
+              <option className="text-black" key={p.id} value={p.id}>
                 {p.nom} {p.prenom}
               </option>
             ))}
@@ -68,11 +67,11 @@ export default function AjouterConsultation() {
 
           {/* Date */}
           <div>
-            <label className="text-white">Consultation date:</label>
+            <label className="text-white">Date de consultation :</label>
             <input
-              required
               type="date"
               name="date"
+              required
               onChange={handleChange}
               className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
             />
@@ -80,28 +79,32 @@ export default function AjouterConsultation() {
 
           {/* Diagnostic */}
           <input
-            required
             name="diagnostic"
             placeholder="Diagnostic"
+            required
+            pattern="^[A-Za-zÀ-ÿ0-9\s,.()-]{3,}$"
+            title="Le diagnostic doit contenir au moins 3 caractères"
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
 
           {/* Prix */}
           <input
-            required
             type="number"
-            min="0"
             name="prix"
             placeholder="Prix"
+            required
+            min="0"
+            step="0.01"
+            title="Le prix doit être un nombre positif"
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
 
           {/* Type */}
           <select
-            required
             name="type"
+            required
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           >

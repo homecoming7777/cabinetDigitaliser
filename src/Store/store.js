@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import patientsReducer from "./patientsSlice";
-import rdvReducer from "./RdvSlice";
-import consultationsReducer from "./ConsultationSlice";
+import patientsReducer from "../Slices/patientsSlice";
+import rdvReducer from "../Slices/RdvSlice";
+import consultationsReducer from "../Slices/ConsultationSlice";
 
 export const store = configureStore({
   reducer: {

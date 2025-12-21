@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { deleteConsultation } from "../ConsultationSlice";
+import { deleteConsultation } from "../Slices/ConsultationSlice";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -8,7 +8,7 @@ export default function Consultations() {
   const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
 
-  // Resolve patient name from patient ID
+
   const getPatientName = (patientId) => {
     const patient = patients.find((p) => p.id === patientId);
     return patient ? `${patient.nom} ${patient.prenom}` : "Patient inconnu";
@@ -32,7 +32,7 @@ export default function Consultations() {
         </Link>
       </div>
 
-      {/* Table */}
+     
       <div className="max-w-6xl mx-auto mt-10 px-4 overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
           <thead className="bg-[#2F404F] text-white">
@@ -71,8 +71,6 @@ export default function Consultations() {
           </tbody>
         </table>
       </div>
-
-      {/* Add button */}
     </div>
   );
 }
