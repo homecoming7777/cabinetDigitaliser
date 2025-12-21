@@ -10,7 +10,6 @@ export default function Consultations() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Filters
   const [selectedPatient, setSelectedPatient] = useState("");
   const [selectedMotif, setSelectedMotif] = useState("");
 
@@ -47,7 +46,6 @@ export default function Consultations() {
           + Ajouter une consultation
         </Link>
 
-        {/* Patient filter */}
         <select
           value={selectedPatient}
           onChange={(e) => setSelectedPatient(e.target.value)}
@@ -61,7 +59,6 @@ export default function Consultations() {
           ))}
         </select>
 
-        {/* Motif filter */}
         <select
           value={selectedMotif}
           onChange={(e) => setSelectedMotif(e.target.value)}
@@ -102,13 +99,13 @@ export default function Consultations() {
             {filteredConsultations.map((c) => (
               <tr key={c.id} className="border-b hover:bg-gray-50 transition">
                 <td className="px-6 py-4 font-medium">{c.date}</td>
-                <td className="px-6 py-4">{getPatientName(c.patient)}</td>
-                <td className="px-6 py-4">{c.type}</td>
-                <td className="px-6 py-4">{c.diagnostic}</td>
-                <td className="px-6 py-4">{c.ordonnance || "-"}</td>
-                <td className="px-6 py-4">{c.prix ? `${c.prix}MAD` : "-"}</td>
-                <td className="px-6 py-4">{c.modePaiement || "-"}</td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-6 py-4 text-center">{getPatientName(c.patient)}</td>
+                <td className="px-6 py-4 text-center">{c.type}</td>
+                <td className="px-6 py-4 text-center">{c.diagnostic}</td>
+                <td className="px-6 py-4 text-center">{c.ordonnance || "-"}</td>
+                <td className="px-6 py-4 text-center">{c.prix ? `${c.prix} MAD` : "-"}</td>
+                <td className="px-6 py-4 text-center">{c.modePaiement || "-"}</td>
+                <td className="px-6 py-4 text-center text-center">
                   <button
                     onClick={() =>
                       navigate(`/patients/${c.patient}`)

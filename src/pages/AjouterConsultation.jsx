@@ -28,7 +28,6 @@ export default function AjouterConsultation() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // Simple validation
     if (name === "patient" && value === "") {
       setErrors({ ...errors, patient: "Veuillez sélectionner un patient" });
     } else if (name === "patient") {
@@ -73,7 +72,6 @@ export default function AjouterConsultation() {
           onSubmit={submit}
           className="bg-[#2f404f9d] rounded-lg p-6 space-y-5 shadow-2xl"
         >
-          {/* Patient select */}
           <div>
             <select
               required
@@ -92,7 +90,6 @@ export default function AjouterConsultation() {
             {errors.patient && <p className="text-red-500 text-sm mt-1">{errors.patient}</p>}
           </div>
 
-          {/* Date */}
           <div>
             <label className="text-white">Date de consultation:</label>
             <input
@@ -105,7 +102,6 @@ export default function AjouterConsultation() {
             />
           </div>
 
-          {/* Diagnostic */}
           <input
             required
             name="diagnostic"
@@ -115,7 +111,6 @@ export default function AjouterConsultation() {
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
 
-          {/* Ordonnance */}
           <input
             name="ordonnance"
             placeholder="Ordonnance"
@@ -124,7 +119,6 @@ export default function AjouterConsultation() {
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
 
-          {/* Prix */}
           <input
             required
             type="number"
@@ -137,7 +131,6 @@ export default function AjouterConsultation() {
           />
           {errors.prix && <p className="text-red-500 text-sm mt-1">{errors.prix}</p>}
 
-          {/* Mode de paiement */}
           <select
             name="modePaiement"
             value={form.modePaiement}
@@ -150,7 +143,6 @@ export default function AjouterConsultation() {
             <option className="text-black" value="Virement">Virement</option>
           </select>
 
-          {/* Type */}
           <select
             required
             name="type"

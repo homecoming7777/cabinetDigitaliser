@@ -25,7 +25,6 @@ export default function AjouterRdv() {
   const submit = (e) => {
     e.preventDefault();
 
-    // ❌ Check for overlapping RDVs
     const conflict = rdvs.find(r => r.date === form.date && r.heure === form.heure);
     if (conflict) {
       alert("Erreur : Ce créneau est déjà réservé !");
@@ -60,7 +59,6 @@ export default function AjouterRdv() {
           onSubmit={submit}
           className="bg-[#2f404f9d] rounded-lg p-6 space-y-5 shadow-2xl"
         >
-          {/* Patient */}
           <select
             required
             name="patientId"
@@ -76,7 +74,6 @@ export default function AjouterRdv() {
             ))}
           </select>
 
-          {/* Date */}
           <div>
             <label className="text-white">Date de rendez-vous:</label>
             <input
@@ -89,7 +86,6 @@ export default function AjouterRdv() {
             />
           </div>
 
-          {/* Heure */}
           <div>
             <label className="text-white">Heure de rendez-vous:</label>
             <input
@@ -102,7 +98,6 @@ export default function AjouterRdv() {
             />
           </div>
 
-          {/* Motif */}
           <select
             required
             name="motif"
@@ -117,7 +112,6 @@ export default function AjouterRdv() {
             <option className="text-black">Urgence</option>
           </select>
 
-          {/* Statut */}
           <select
             required
             name="statut"

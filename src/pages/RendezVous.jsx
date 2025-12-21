@@ -9,7 +9,6 @@ export default function RendezVous() {
   const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
 
-  // Filter states
   const [patientFilter, setPatientFilter] = useState("");
   const [motifFilter, setMotifFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -29,7 +28,6 @@ export default function RendezVous() {
     return colors[status] || "bg-gray-100 text-gray-800";
   };
 
-  // Apply filters
   const filteredRdvs = rdvs.filter((r) => {
     return (
       (patientFilter === "" || r.patientId === Number(patientFilter)) &&
@@ -48,57 +46,55 @@ export default function RendezVous() {
 
       <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
+      <div className="max-w-6xl mx-auto mt-6 px-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+          <select
+            value={patientFilter}
+            onChange={(e) => setPatientFilter(e.target.value)}
+            className="border-2 rounded-lg w-full sm:w-60 p-2 border-[#2F404F] bg-white"
+          >
+            <option value="">Tous les patients</option>
+            {patients.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nom} {p.prenom}
+              </option>
+            ))}
+          </select>
 
-      {/* Filters */}
-      <div className="max-w-6xl mx-auto mt-6 px-4 grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4">
-      <div className="flex justify-center mt-8 gap-4 flex-wrap">
-        <Link
-          to="/rendez-vous/ajouter"
-          className="inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 text-white hover:scale-105 transition"
-        >
-          + Ajouter un rendez-vous
-        </Link>
-      </div>
-        {/* Patient filter */}
-        <select
-          value={patientFilter}
-          onChange={(e) => setPatientFilter(e.target.value)}
-          className="border-2 rounded-lg w-60 p-2 border-[#2F404F] bg-white"
-        >
-          <option value="">Tous les patients</option>
-          {patients.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nom} {p.prenom}
-            </option>
-          ))}
-        </select>
+          <select
+            value={motifFilter}
+            onChange={(e) => setMotifFilter(e.target.value)}
+            className="border-2 rounded-lg w-full sm:w-48 p-2 border-[#2F404F] bg-white"
+          >
+            <option value="">Tous les motifs</option>
+            <option value="Consultation">Consultation</option>
+            <option value="Contrôle">Contrôle</option>
+            <option value="Certificat">Certificat</option>
+            <option value="Vaccination">Vaccination</option>
+            <option value="Urgence">Urgence</option>
+          </select>
 
-        {/* Motif filter */}
-        <select
-          value={motifFilter}
-          onChange={(e) => setMotifFilter(e.target.value)}
-          className="border-2 rounded-lg w-48 p-2 border-[#2F404F] bg-white"
-        >
-          <option value="">Tous les motifs</option>
-          <option value="Consultation">Consultation</option>
-          <option value="Contrôle">Contrôle</option>
-          <option value="Certificat">Certificat</option>
-          <option value="Vaccination">Vaccination</option>
-          <option value="Urgence">Urgence</option>
-        </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border-2 rounded-lg w-full sm:w-48 p-2 border-[#2F404F] bg-white"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="En attente">En attente</option>
+            <option value="Confirmé">Confirmé</option>
+            <option value="Honoré">Honoré</option>
+            <option value="Annulé">Annulé</option>
+          </select>
+        </div>
 
-        {/* Status filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="border-2 rounded-lg w-48 p-2 border-[#2F404F] bg-white"
-        >
-          <option value="">Tous les statuts</option>
-          <option value="En attente">En attente</option>
-          <option value="Confirmé">Confirmé</option>
-          <option value="Honoré">Honoré</option>
-          <option value="Annulé">Annulé</option>
-        </select>
+        <div className="flex justify-center mt-2 sm:mt-0">
+          <Link
+            to="/rendez-vous/ajouter"
+            className="inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 text-white hover:scale-105 transition"
+          >
+            + Ajouter un rendez-vous
+          </Link>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto mt-6 px-4 overflow-x-auto">

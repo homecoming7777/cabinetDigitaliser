@@ -35,9 +35,6 @@ export default function Dashboard() {
 
   const today = new Date();
 
-  /* =======================
-     MONTH DATA
-  ======================= */
   const monthConsultations = consultations.filter((c) =>
     isSameMonth(parseISO(c.date), today)
   );
@@ -52,9 +49,7 @@ export default function Dashboard() {
       ? Math.round(monthRevenue / monthConsultations.length)
       : 0;
 
-  /* =======================
-     MOST FREQUENT PATIENT
-  ======================= */
+
   const consultationCount = {};
 
   monthConsultations.forEach((c) => {
@@ -73,17 +68,13 @@ export default function Dashboard() {
     (p) => p.id == mostFrequentPatientId
   );
 
-  /* =======================
-     CHART DATA
-  ======================= */
+
   const revenueTimeline = monthConsultations.map((c) => ({
     date: format(parseISO(c.date), "dd MMM"),
     revenue: Number(c.prix || 0),
   }));
 
-  /* =======================
-     STYLES
-  ======================= */
+
   const card =
     "relative bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all";
 
@@ -91,7 +82,6 @@ export default function Dashboard() {
     <>
     <Navbar />
     <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 p-6">
-      {/* TITLE */}
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -100,7 +90,6 @@ export default function Dashboard() {
         Clinic Performance Dashboard
       </motion.h1>
 
-      {/* KPI CARDS */}
       <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
         <motion.div whileHover={{ scale: 1.05 }} className={card}>
           <FaUsers className="text-blue-500 text-4xl mb-3" />
@@ -132,7 +121,6 @@ export default function Dashboard() {
           </p>
         </motion.div>
 
-        {/* MOST FREQUENT PATIENT */}
         <motion.div data-aos="fade-up" whileHover={{ scale: 1.05 }} className={card}>
           <FaUserCheck className="text-pink-500 text-4xl mb-3" />
           <p className="text-sm text-gray-500">Most Frequent Patient</p>
@@ -153,7 +141,6 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
-      {/* REVENUE CHART */}
       <motion.div data-aos="fade-up"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

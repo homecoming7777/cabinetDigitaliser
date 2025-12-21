@@ -61,7 +61,6 @@ export default function PatientForm() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            {/* Nom */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="nom"
@@ -73,7 +72,6 @@ export default function PatientForm() {
               required
             />
 
-            {/* Prénom */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="prenom"
@@ -85,7 +83,6 @@ export default function PatientForm() {
               required
             />
 
-            {/* Date de naissance */}
             <div>
               <label className="text-white">Date de naissance:</label>
               <input
@@ -98,7 +95,6 @@ export default function PatientForm() {
               />
             </div>
 
-            {/* Téléphone */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="telephone"
@@ -109,7 +105,6 @@ export default function PatientForm() {
               title="Le numéro doit contenir au moins 10 chiffres"
             />
 
-            {/* Adresse */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="adresse"
@@ -118,7 +113,6 @@ export default function PatientForm() {
               onChange={handleChange}
             />
 
-            {/* Email */}
             <input
               type="email"
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
@@ -129,7 +123,6 @@ export default function PatientForm() {
               title="Veuillez entrer une adresse email valide"
             />
 
-            {/* Groupe sanguin */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="groupeSanguin"
@@ -140,7 +133,6 @@ export default function PatientForm() {
               title="Exemples valides : A+, O-, AB+"
             />
 
-            {/* Allergies */}
             <input
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="allergies"
