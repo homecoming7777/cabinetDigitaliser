@@ -8,12 +8,14 @@ export default function AjouterRdv() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const patients = useSelector((state) => state.patients);
+  const rdvs = useSelector((state) => state.rdv.list);
 
   const [form, setForm] = useState({
     patientId: "",
     date: "",
     heure: "",
     motif: "Consultation",
+    statut: "En attente"
   });
 
   const handleChange = (e) => {
@@ -23,6 +25,13 @@ export default function AjouterRdv() {
   const submit = (e) => {
     e.preventDefault();
 
+    // ❌ Check for overlapping RDVs
+    const conflict = rdvs.find(r => r.date === form.date && r.heure === form.heure);
+    if (conflict) {
+      alert("Erreur : Ce créneau est déjà réservé !");
+      return;
+    }
+
     dispatch(
       addRdv({
         id: Date.now(),
@@ -30,6 +39,7 @@ export default function AjouterRdv() {
         date: form.date,
         heure: form.heure,
         motif: form.motif,
+        statut: form.statut
       })
     );
 
@@ -39,8 +49,7 @@ export default function AjouterRdv() {
   return (
     <>
       <Navbar />
-
-      <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl mt-5 font-extrabold text-[#2F404F]">
+      <h1 className="text-center capitalize text-4xl mt-5 font-extrabold text-[#2F404F]">
         Ajouter un RDV
       </h1>
 
@@ -49,14 +58,15 @@ export default function AjouterRdv() {
       <div className="max-w-5xl mx-auto mt-10 px-4">
         <form
           onSubmit={submit}
-          className="bg-[#2f404f9d] mb-10 mt-10 rounded-lg p-6 space-y-4 shadow-2xl"
+          className="bg-[#2f404f9d] rounded-lg p-6 space-y-5 shadow-2xl"
         >
           {/* Patient */}
           <select
             required
             name="patientId"
+            value={form.patientId}
             onChange={handleChange}
-            className="border-2 mt-5 rounded-lg w-full p-2 border-white text-white bg-transparent"
+            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           >
             <option value="">Sélectionner un patient</option>
             {patients.map((p) => (
@@ -67,26 +77,26 @@ export default function AjouterRdv() {
           </select>
 
           {/* Date */}
-          <div className="mt-5">
-            <label className="text-white">Date de rendez-vous :</label>
+          <div>
+            <label className="text-white">Date de rendez-vous:</label>
             <input
+              required
               type="date"
               name="date"
-              required
-              title="Veuillez choisir une date valide"
+              value={form.date}
               onChange={handleChange}
               className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
             />
           </div>
 
           {/* Heure */}
-          <div className="mt-5">
-            <label className="text-white">Heure de rendez-vous :</label>
+          <div>
+            <label className="text-white">Heure de rendez-vous:</label>
             <input
+              required
               type="time"
               name="heure"
-              required
-              title="Veuillez choisir une heure valide"
+              value={form.heure}
               onChange={handleChange}
               className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
             />
@@ -96,8 +106,9 @@ export default function AjouterRdv() {
           <select
             required
             name="motif"
+            value={form.motif}
             onChange={handleChange}
-            className="border-2 mt-5 rounded-lg w-full p-2 border-white text-white bg-transparent"
+            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           >
             <option className="text-black">Consultation</option>
             <option className="text-black">Contrôle</option>
@@ -106,9 +117,23 @@ export default function AjouterRdv() {
             <option className="text-black">Urgence</option>
           </select>
 
+          {/* Statut */}
+          <select
+            required
+            name="statut"
+            value={form.statut}
+            onChange={handleChange}
+            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
+          >
+            <option className="text-black" value="En attente">En attente</option>
+            <option className="text-black" value="Confirmé">Confirmé</option>
+            <option className="text-black" value="Honoré">Honoré</option>
+            <option className="text-black" value="Annulé">Annulé</option>
+          </select>
+
           <button
             type="submit"
-            className="group mt-5 text-white inline-flex h-12 items-center justify-center rounded-md border border-neutral-200 px-6 transition-all hover:bg-white hover:text-[#2F404F]"
+            className="w-full mt-4 h-12 text-white rounded-md border border-white hover:bg-white hover:text-[#2F404F] transition"
           >
             Créer
           </button>

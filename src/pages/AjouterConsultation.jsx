@@ -15,20 +15,43 @@ export default function AjouterConsultation() {
     diagnostic: "",
     type: "Consultation",
     prix: "",
+    ordonnance: "",
+    modePaiement: "",
+  });
+
+  const [errors, setErrors] = useState({
+    patient: "",
+    prix: "",
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    // Simple validation
+    if (name === "patient" && value === "") {
+      setErrors({ ...errors, patient: "Veuillez sélectionner un patient" });
+    } else if (name === "patient") {
+      setErrors({ ...errors, patient: "" });
+    }
+
+    if (name === "prix" && (value === "" || Number(value) < 0)) {
+      setErrors({ ...errors, prix: "Le prix doit être un nombre positif" });
+    } else if (name === "prix") {
+      setErrors({ ...errors, prix: "" });
+    }
   };
 
   const submit = (e) => {
     e.preventDefault();
 
+    if (!form.patient || form.prix === "" || Number(form.prix) < 0) return;
+
     dispatch(
       addConsultation({
         ...form,
         patient: Number(form.patient),
-        prix: Number(form.prix) || 0,
+        prix: Number(form.prix),
       })
     );
 
@@ -50,28 +73,33 @@ export default function AjouterConsultation() {
           onSubmit={submit}
           className="bg-[#2f404f9d] rounded-lg p-6 space-y-5 shadow-2xl"
         >
-          {/* Patient */}
-          <select
-            required
-            name="patient"
-            onChange={handleChange}
-            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
-          >
-            <option className="text-black" value="">Sélectionner un patient</option>
-            {patients.map((p) => (
-              <option className="text-black" key={p.id} value={p.id}>
-                {p.nom} {p.prenom}
-              </option>
-            ))}
-          </select>
+          {/* Patient select */}
+          <div>
+            <select
+              required
+              name="patient"
+              value={form.patient}
+              onChange={handleChange}
+              className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
+            >
+              <option className="text-black" value="">Sélectionner un patient</option>
+              {patients.map((p) => (
+                <option className="text-black" key={p.id} value={p.id}>
+                  {p.nom} {p.prenom}
+                </option>
+              ))}
+            </select>
+            {errors.patient && <p className="text-red-500 text-sm mt-1">{errors.patient}</p>}
+          </div>
 
           {/* Date */}
           <div>
-            <label className="text-white">Date de consultation :</label>
+            <label className="text-white">Date de consultation:</label>
             <input
+              required
               type="date"
               name="date"
-              required
+              value={form.date}
               onChange={handleChange}
               className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
             />
@@ -79,38 +107,60 @@ export default function AjouterConsultation() {
 
           {/* Diagnostic */}
           <input
+            required
             name="diagnostic"
             placeholder="Diagnostic"
-            required
-            pattern="^[A-Za-zÀ-ÿ0-9\s,.()-]{3,}$"
-            title="Le diagnostic doit contenir au moins 3 caractères"
+            value={form.diagnostic}
+            onChange={handleChange}
+            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
+          />
+
+          {/* Ordonnance */}
+          <input
+            name="ordonnance"
+            placeholder="Ordonnance"
+            value={form.ordonnance}
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
 
           {/* Prix */}
           <input
-            type="number"
-            name="prix"
-            placeholder="Prix"
             required
+            type="number"
             min="0"
-            step="0.01"
-            title="Le prix doit être un nombre positif"
+            name="prix"
+            placeholder="Prix (MAD)"
+            value={form.prix}
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           />
+          {errors.prix && <p className="text-red-500 text-sm mt-1">{errors.prix}</p>}
 
-          {/* Type */}
+          {/* Mode de paiement */}
           <select
-            name="type"
-            required
+            name="modePaiement"
+            value={form.modePaiement}
             onChange={handleChange}
             className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
           >
-            <option className="text-black">Consultation</option>
-            <option className="text-black">Contrôle</option>
-            <option className="text-black">Certificat</option>
+            <option value="">Mode de paiement</option>
+            <option className="text-black" value="Espèces">Espèces</option>
+            <option className="text-black" value="Carte bancaire">Carte bancaire</option>
+            <option className="text-black" value="Virement">Virement</option>
+          </select>
+
+          {/* Type */}
+          <select
+            required
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            className="border-2 rounded-lg w-full p-2 border-white text-white bg-transparent"
+          >
+            <option className="text-black" value="Consultation">Consultation</option>
+            <option className="text-black" value="Contrôle">Contrôle</option>
+            <option className="text-black" value="Certificat">Certificat</option>
           </select>
 
           <button
