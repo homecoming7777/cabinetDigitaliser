@@ -8,10 +8,7 @@ import Navbar from "../components/Navbar";
 export default function PatientsList() {
 
   /* ===== Get patients from Redux ===== */
-  const patients = useSelector((state) =>
-    Array.isArray(state.patients) ? state.patients : []
-  );
-
+  const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
 
   /* ===== Filters state ===== */
@@ -20,17 +17,20 @@ export default function PatientsList() {
   const [ageRange, setAgeRange] = useState("");
 
   /* ===== Filter patients ===== */
+
   const filteredPatients = patients.filter((patient) => {
     const age = calculateAge(patient.dateNaissance);
 
     // Search by name
-    const matchSearch =
-      `${patient.nom} ${patient.prenom}`
-        .toLowerCase()
-        .includes(search.toLowerCase());
+
+    const fullName = (patient.nom + " " + patient.prenom).toLowerCase();
+    const searchText = search.toLowerCase();
+    const matchSearch = fullName.includes(searchText);
+
 
     // Filter by blood group
-    const matchGroupe =
+    
+    const bloodGroupe =
       !groupe || patient.groupeSanguin === groupe;
 
     // Filter by age range
@@ -41,7 +41,7 @@ export default function PatientsList() {
       (ageRange === "41-60" && age >= 41 && age <= 60) ||
       (ageRange === "60+" && age > 60);
 
-    return matchSearch && matchGroupe && matchAge;
+    return matchSearch && bloodGroupe && matchAge;
   });
 
   return (
