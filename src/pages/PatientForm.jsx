@@ -5,16 +5,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 export default function PatientForm() {
+  /* ===== Hooks ===== */
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+  /* ===== Get patient id from URL ===== */
   const params = new URLSearchParams(location.search);
   const editId = params.get("id");
 
+  /* ===== Get patient from store if editing ===== */
   const existingPatient = useSelector((state) =>
-    state.patients.find((p) => p.id === parseInt(editId))
+    state.patients.find((p) => p.id === Number(editId))
   );
 
+  /* ===== Form state ===== */
   const [patient, setPatient] = useState({
     nom: "",
     prenom: "",
@@ -26,21 +31,33 @@ export default function PatientForm() {
     allergies: "",
   });
 
+  /* ===== Fill form when editing ===== */
   useEffect(() => {
-    if (existingPatient) setPatient(existingPatient);
+    if (existingPatient) {
+      setPatient(existingPatient);
+    }
   }, [existingPatient]);
 
-  const handleChange = (e) => {
-    setPatient({ ...patient, [e.target.name]: e.target.value });
+  /* ===== Handle input change ===== */
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setPatient((prevPatient) => ({
+      ...prevPatient,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  /* ===== Handle submit ===== */
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     if (existingPatient) {
       dispatch(updatePatient(patient));
     } else {
       dispatch(addPatient(patient));
     }
+
     navigate("/patients");
   };
 
@@ -96,6 +113,7 @@ export default function PatientForm() {
             </div>
 
             <input
+            required
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="telephone"
               placeholder="Téléphone"
@@ -105,7 +123,7 @@ export default function PatientForm() {
               title="Le numéro doit contenir au moins 10 chiffres"
             />
 
-            <input
+            <input required
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="adresse"
               placeholder="Adresse"
@@ -114,6 +132,7 @@ export default function PatientForm() {
             />
 
             <input
+            required
               type="email"
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="email"
@@ -124,6 +143,7 @@ export default function PatientForm() {
             />
 
             <input
+            required
               className="border-2 rounded-lg outline-0 w-full p-2 border-white text-white"
               name="groupeSanguin"
               placeholder="Groupe sanguin (A+, O-, AB+)"
@@ -139,6 +159,7 @@ export default function PatientForm() {
               placeholder="Allergies"
               value={patient.allergies}
               onChange={handleChange}
+              required
             />
           </div>
 

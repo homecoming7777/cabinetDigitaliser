@@ -6,25 +6,34 @@ import { calculateAge } from "../Slices/calculateAge";
 import Navbar from "../components/Navbar";
 
 export default function PatientsList() {
-  const patients = useSelector(state =>
+
+  /* ===== Get patients from Redux ===== */
+  const patients = useSelector((state) =>
     Array.isArray(state.patients) ? state.patients : []
   );
+
   const dispatch = useDispatch();
 
- 
+  /* ===== Filters state ===== */
   const [search, setSearch] = useState("");
   const [groupe, setGroupe] = useState("");
   const [ageRange, setAgeRange] = useState("");
 
-  const filteredPatients = patients.filter(p => {
-    const age = calculateAge(p.dateNaissance);
+  /* ===== Filter patients ===== */
+  const filteredPatients = patients.filter((patient) => {
+    const age = calculateAge(patient.dateNaissance);
 
+    // Search by name
     const matchSearch =
-      `${p.nom} ${p.prenom}`.toLowerCase().includes(search.toLowerCase());
+      `${patient.nom} ${patient.prenom}`
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
+    // Filter by blood group
     const matchGroupe =
-      !groupe || p.groupeSanguin === groupe;
+      !groupe || patient.groupeSanguin === groupe;
 
+    // Filter by age range
     const matchAge =
       !ageRange ||
       (ageRange === "0-18" && age <= 18) ||
@@ -44,21 +53,22 @@ export default function PatientsList() {
           Annuaire des patients
         </h1>
 
-       <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
+        <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
+        {/* ===== Filters ===== */}
         <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
 
           <input
             type="text"
             placeholder="Nom / Prénom"
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             className="border rounded px-4 py-2 outline-none"
           />
 
           <select
             value={groupe}
-            onChange={e => setGroupe(e.target.value)}
+            onChange={(e) => setGroupe(e.target.value)}
             className="border rounded px-4 py-2"
           >
             <option value="">Tous les groupes</option>
@@ -74,7 +84,7 @@ export default function PatientsList() {
 
           <select
             value={ageRange}
-            onChange={e => setAgeRange(e.target.value)}
+            onChange={(e) => setAgeRange(e.target.value)}
             className="border rounded px-4 py-2"
           >
             <option value="">Tous les âges</option>
@@ -84,6 +94,8 @@ export default function PatientsList() {
             <option value="60+">60+</option>
           </select>
         </div>
+
+        {/* ===== Add button ===== */}
         <div className="flex justify-center mt-10 mb-10">
           <Link
             to="/patients/ajouter"
@@ -93,6 +105,7 @@ export default function PatientsList() {
           </Link>
         </div>
 
+        {/* ===== Table ===== */}
         <div className="overflow-x-auto mt-10">
           {filteredPatients.length > 0 ? (
             <table className="w-full max-w-6xl mx-auto border shadow">
@@ -106,28 +119,37 @@ export default function PatientsList() {
                   <th className="p-3 text-center">Action</th>
                 </tr>
               </thead>
+
               <tbody>
-                {filteredPatients.map(p => (
-                  <tr key={p.id} className="border-t hover:bg-gray-50">
+                {filteredPatients.map((patient) => (
+                  <tr key={patient.id} className="border-t hover:bg-gray-50">
+
                     <td className="p-3 font-semibold">
-                      <Link to={`/patients/${p.id}`} className="hover:underline">
-                        {p.nom} {p.prenom}
+                      <Link
+                        to={`/patients/${patient.id}`}
+                        className="hover:underline"
+                      >
+                        {patient.nom} {patient.prenom}
                       </Link>
                     </td>
+
                     <td className="p-3 text-center">
-                      {calculateAge(p.dateNaissance)} ans
+                      {calculateAge(patient.dateNaissance)} ans
                     </td>
-                    <td className="p-3 text-center">{p.telephone}</td>
-                    <td className="p-3 text-center">{p.email}</td>
-                    <td className="p-3 text-center">{p.groupeSanguin}</td>
+
+                    <td className="p-3 text-center">{patient.telephone}</td>
+                    <td className="p-3 text-center">{patient.email}</td>
+                    <td className="p-3 text-center">{patient.groupeSanguin}</td>
+
                     <td className="p-3 text-center">
                       <button
-                        onClick={() => dispatch(deletePatient(p.id))}
+                        onClick={() => dispatch(deletePatient(patient.id))}
                         className="text-white bg-red-500 px-3 rounded font-bold py-2 hover:scale-105"
                       >
                         supprimer
                       </button>
                     </td>
+
                   </tr>
                 ))}
               </tbody>
@@ -138,7 +160,6 @@ export default function PatientsList() {
             </p>
           )}
         </div>
-
       </div>
     </>
   );
