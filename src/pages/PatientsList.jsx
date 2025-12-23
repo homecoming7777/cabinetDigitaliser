@@ -13,18 +13,14 @@ export default function PatientsList() {
   const [groupe, setGroupe] = useState("");
   const [ageRange, setAgeRange] = useState("");
 
-  // 🔍 Filter patients
   const filteredPatients = patients.filter((patient) => {
     const age = calculateAge(patient.dateNaissance);
 
-    // search by full name
     const fullName = (patient.nom + " " + patient.prenom).toLowerCase();
     const matchSearch = fullName.includes(search.toLowerCase());
 
-    // blood group filter
     const matchGroupe = !groupe || patient.groupeSanguin === groupe;
 
-    // age filter
     let matchAge = true;
 
     if (ageRange === "0-18") matchAge = age <= 18;
