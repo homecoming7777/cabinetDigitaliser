@@ -14,7 +14,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { parseISO, isSameMonth, format } from "date-fns";
+import { format } from "date-fns";
 
 import {
   FaUsers,
@@ -26,32 +26,39 @@ import {
 
 export default function Dashboard() {
 
+  /* ===== Init animations ===== */
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-    });
+    AOS.init({ duration: 800, once: true });
   }, []);
 
+  /* ===== Get data from Redux ===== */
   const patients = useSelector((state) => state.patients);
   const consultations = useSelector((state) => state.consultations.list);
 
   const today = new Date();
 
-  const monthConsultations = consultations.filter((c) =>
-    isSameMonth(parseISO(c.date), today)
-  );
+  /* ===== Filter consultations of current month ===== */
+  const monthConsultations = consultations.filter((c) => {
+    const date = new Date(c.date);
+    return (
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  });
 
+  /* ===== Monthly revenue ===== */
   const monthRevenue = monthConsultations.reduce(
-    (total, consultation) => total + Number(consultation.prix || 0),
+    (total, c) => total + Number(c.prix || 0),
     0
   );
 
+  /* ===== Average revenue ===== */
   const avgRevenue =
     monthConsultations.length > 0
       ? Math.round(monthRevenue / monthConsultations.length)
       : 0;
 
+  /* ===== Count consultations per patient ===== */
   const consultationCount = {};
 
   monthConsultations.forEach((c) => {
@@ -59,24 +66,26 @@ export default function Dashboard() {
       (consultationCount[c.patient] || 0) + 1;
   });
 
-  const mostFrequentPatientId =
-    Object.keys(consultationCount).length > 0
-      ? Object.keys(consultationCount).reduce((a, b) =>
-          consultationCount[a] > consultationCount[b] ? a : b
-        )
-      : null;
+  /* ===== Most frequent patient ===== */
+  let mostFrequentPatient = null;
+  let maxConsultations = 0;
 
-  const mostFrequentPatient = patients.find(
-    (p) => p.id == mostFrequentPatientId
-  );
+  patients.forEach((p) => {
+    const count = consultationCount[p.id] || 0;
+    if (count > maxConsultations) {
+      maxConsultations = count;
+      mostFrequentPatient = p;
+    }
+  });
 
+  /* ===== Chart data ===== */
   const revenueTimeline = monthConsultations.map((c) => ({
-    date: format(parseISO(c.date), "dd MMM"),
+    date: format(new Date(c.date), "dd MMM"),
     revenue: Number(c.prix || 0),
   }));
 
-  const card =
-    "relative bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all";
+  const cardStyle =
+    "bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all";
 
   return (
     <>
@@ -92,57 +101,56 @@ export default function Dashboard() {
           Clinic Performance Dashboard
         </motion.h1>
 
-        <div data-aos="fade-up" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+        {/* ===== Stats cards ===== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
 
-          <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <div className={cardStyle}>
             <FaUsers className="text-blue-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Total Patients</p>
             <p className="text-3xl font-bold">{patients.length}</p>
-          </motion.div>
+          </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <div className={cardStyle}>
             <FaStethoscope className="text-purple-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Consultations (Month)</p>
-            <p className="text-3xl font-bold">{monthConsultations.length}</p>
-          </motion.div>
+            <p className="text-3xl font-bold">
+              {monthConsultations.length}
+            </p>
+          </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <div className={cardStyle}>
             <FaMoneyBillWave className="text-emerald-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Monthly Revenue</p>
             <p className="text-3xl font-bold">{monthRevenue} MAD</p>
-          </motion.div>
+          </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <div className={cardStyle}>
             <FaChartLine className="text-orange-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Avg / Consultation</p>
             <p className="text-3xl font-bold">{avgRevenue} MAD</p>
-          </motion.div>
+          </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} className={card}>
+          <div className={cardStyle}>
             <FaUserCheck className="text-pink-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Most Frequent Patient</p>
 
             {mostFrequentPatient ? (
               <>
-                <p className="text-lg font-bold">
+                <p className="font-bold">
                   {mostFrequentPatient.nom} {mostFrequentPatient.prenom}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {consultationCount[mostFrequentPatientId]} consultations
+                  {maxConsultations} consultations
                 </p>
               </>
             ) : (
               <p className="text-gray-400">No data</p>
             )}
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          data-aos="fade-up"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl p-6 shadow-lg"
-        >
+        {/* ===== Chart ===== */}
+        <div className="bg-white rounded-2xl p-6 shadow-lg">
           <h2 className="text-xl font-semibold mb-4">
             Revenue Trend (This Month)
           </h2>
@@ -156,12 +164,12 @@ export default function Dashboard() {
                 type="monotone"
                 dataKey="revenue"
                 stroke="#10b981"
-                fillOpacity={0.4}
                 fill="#10b981"
+                fillOpacity={0.3}
               />
             </AreaChart>
           </ResponsiveContainer>
-        </motion.div>
+        </div>
       </div>
     </>
   );

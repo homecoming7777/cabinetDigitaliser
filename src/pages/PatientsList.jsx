@@ -6,7 +6,6 @@ import { calculateAge } from "../Slices/calculateAge";
 import Navbar from "../components/Navbar";
 
 export default function PatientsList() {
-
   const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
 
@@ -14,40 +13,26 @@ export default function PatientsList() {
   const [groupe, setGroupe] = useState("");
   const [ageRange, setAgeRange] = useState("");
 
-
+  // 🔍 Filter patients
   const filteredPatients = patients.filter((patient) => {
     const age = calculateAge(patient.dateNaissance);
 
-
+    // search by full name
     const fullName = (patient.nom + " " + patient.prenom).toLowerCase();
-    const searchText = search.toLowerCase();
-    const matchSearch = fullName.includes(searchText);
+    const matchSearch = fullName.includes(search.toLowerCase());
 
+    // blood group filter
+    const matchGroupe = !groupe || patient.groupeSanguin === groupe;
 
-
-    const bloodGroupe =
-      !groupe || patient.groupeSanguin === groupe;
-
+    // age filter
     let matchAge = true;
 
-    if (ageRange === "0-18") {
-      matchAge = age <= 18;
-    }
+    if (ageRange === "0-18") matchAge = age <= 18;
+    if (ageRange === "19-40") matchAge = age >= 19 && age <= 40;
+    if (ageRange === "41-60") matchAge = age >= 41 && age <= 60;
+    if (ageRange === "60+") matchAge = age > 60;
 
-    if (ageRange === "19-40") {
-      matchAge = age >= 19 && age <= 40;
-    }
-
-    if (ageRange === "41-60") {
-      matchAge = age >= 41 && age <= 60;
-    }
-
-    if (ageRange === "60+") {
-      matchAge = age > 60;
-    }
-
-
-    return matchSearch && bloodGroupe && matchAge;
+    return matchSearch && matchGroupe && matchAge;
   });
 
   return (
@@ -62,7 +47,6 @@ export default function PatientsList() {
         <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
         <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-
           <input
             type="text"
             placeholder="Nom / Prénom"
@@ -114,6 +98,7 @@ export default function PatientsList() {
             <table className="w-full max-w-6xl mx-auto border shadow">
               <thead className="bg-[#2F404F] text-white">
                 <tr>
+                  <th className="p-3 text-center">#</th>
                   <th className="p-3 text-left">Nom</th>
                   <th className="p-3">Âge</th>
                   <th className="p-3">Téléphone</th>
@@ -124,8 +109,11 @@ export default function PatientsList() {
               </thead>
 
               <tbody>
-                {filteredPatients.map((patient) => (
+                {filteredPatients.map((patient, index) => (
                   <tr key={patient.id} className="border-t hover:bg-gray-50">
+                    <td className="p-3 text-center font-bold text-gray-500">
+                      {index + 1}
+                    </td>
 
                     <td className="p-3 font-semibold">
                       <Link
@@ -142,7 +130,9 @@ export default function PatientsList() {
 
                     <td className="p-3 text-center">{patient.telephone}</td>
                     <td className="p-3 text-center">{patient.email}</td>
-                    <td className="p-3 text-center">{patient.groupeSanguin}</td>
+                    <td className="p-3 text-center">
+                      {patient.groupeSanguin}
+                    </td>
 
                     <td className="p-3 text-center">
                       <button
@@ -152,7 +142,6 @@ export default function PatientsList() {
                         supprimer
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>

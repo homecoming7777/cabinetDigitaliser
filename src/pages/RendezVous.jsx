@@ -13,11 +13,13 @@ export default function RendezVous() {
   const [motifFilter, setMotifFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
+  // Get patient full name
   const getPatientName = (patientId) => {
     const patient = patients.find((p) => p.id === patientId);
     return patient ? `${patient.nom} ${patient.prenom}` : "Patient inconnu";
   };
 
+  // Status badge colors
   const getStatusBadge = (status) => {
     const colors = {
       "En attente": "bg-yellow-100 text-yellow-800",
@@ -28,6 +30,7 @@ export default function RendezVous() {
     return colors[status] || "bg-gray-100 text-gray-800";
   };
 
+  // Filters
   const filteredRdvs = rdvs.filter((r) => {
     return (
       (patientFilter === "" || r.patientId === Number(patientFilter)) &&
@@ -46,6 +49,7 @@ export default function RendezVous() {
 
       <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
+      {/* Filters */}
       <div className="max-w-6xl mx-auto mt-6 px-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
           <select
@@ -97,10 +101,12 @@ export default function RendezVous() {
         </div>
       </div>
 
+      {/* Table */}
       <div className="max-w-6xl mx-auto mt-6 px-4 overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
           <thead className="bg-[#2F404F] text-white">
             <tr>
+              <th className="px-6 py-3 text-center">#</th>
               <th className="px-6 py-3 text-left">Date</th>
               <th className="px-6 py-3 text-left">Heure</th>
               <th className="px-6 py-3 text-left">Patient</th>
@@ -113,33 +119,45 @@ export default function RendezVous() {
           <tbody>
             {filteredRdvs.length === 0 && (
               <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-500">
+                <td colSpan="7" className="text-center py-6 text-gray-500">
                   Aucun rendez-vous trouvé
                 </td>
               </tr>
             )}
 
-            {filteredRdvs.map((r) => (
+            {filteredRdvs.map((r, index) => (
               <tr key={r.id} className="border-b hover:bg-gray-50 transition">
+                {/* Index */}
+                <td className="px-6 py-4 text-center font-bold text-gray-500">
+                  {index + 1}
+                </td>
+
                 <td className="px-6 py-4">{r.date}</td>
                 <td className="px-6 py-4">{r.heure}</td>
                 <td className="px-6 py-4">{getPatientName(r.patientId)}</td>
                 <td className="px-6 py-4">{r.motif}</td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm ${getStatusBadge(r.statut)}`}
+                    className={`px-3 py-1 rounded-full text-sm ${getStatusBadge(
+                      r.statut
+                    )}`}
                   >
                     {r.statut}
                   </span>
                 </td>
-                <td className="px-6 py-4 flex justify-center gap-2 text-center">
+
+                <td className="px-6 py-4 flex justify-center gap-2">
                   <button
                     onClick={() => dispatch(deleteRdv(r.id))}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
                   >
                     Supprimer
                   </button>
-                  <Link to={`/rendez-vous/modifier/${r.id}`} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded">
+
+                  <Link
+                    to={`/rendez-vous/modifier/${r.id}`}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+                  >
                     Modifier
                   </Link>
                 </td>
