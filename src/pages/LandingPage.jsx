@@ -177,7 +177,7 @@ export default function LandingPage() {
               alt="abdelkabir"
               className="w-28 h-28 mx-auto rounded-full mb-4 object-cover"
             />
-            <h3 className="text-xl font-semibold">Abdelakabir Yahya Nahed</h3>
+            <h3 className="text-xl font-semibold">Abdelkabir Yahya Nahed</h3>
             <p className="text-gray-500 font-medium">Full-stack Developer</p>
           </div>
         </div>

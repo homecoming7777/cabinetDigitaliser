@@ -5,21 +5,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 export default function PatientForm() {
-  /* ===== Hooks ===== */
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* ===== Get patient id from URL ===== */
   const params = new URLSearchParams(location.search);
   const editId = params.get("id");
 
-  /* ===== Get patient from store if editing ===== */
   const existingPatient = useSelector((state) =>
     state.patients.find((p) => p.id === Number(editId))
   );
 
-  /* ===== Form state ===== */
   const [patient, setPatient] = useState({
     nom: "",
     prenom: "",
@@ -31,24 +27,20 @@ export default function PatientForm() {
     allergies: "",
   });
 
-  /* ===== Fill form when editing ===== */
   useEffect(() => {
     if (existingPatient) {
       setPatient(existingPatient);
     }
   }, [existingPatient]);
 
-  /* ===== Handle input change ===== */
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const handleChange = (e) => {
+  setPatient({
+    ...patient,
+    [e.target.name]: e.target.value,
+  });
+};
 
-    setPatient((prevPatient) => ({
-      ...prevPatient,
-      [name]: value,
-    }));
-  };
 
-  /* ===== Handle submit ===== */
   const handleSubmit = (event) => {
     event.preventDefault();
 

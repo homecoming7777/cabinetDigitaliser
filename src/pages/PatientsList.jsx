@@ -7,39 +7,45 @@ import Navbar from "../components/Navbar";
 
 export default function PatientsList() {
 
-  /* ===== Get patients from Redux ===== */
   const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
 
-  /* ===== Filters state ===== */
   const [search, setSearch] = useState("");
   const [groupe, setGroupe] = useState("");
   const [ageRange, setAgeRange] = useState("");
 
-  /* ===== Filter patients ===== */
 
   const filteredPatients = patients.filter((patient) => {
     const age = calculateAge(patient.dateNaissance);
 
-    // Search by name
 
     const fullName = (patient.nom + " " + patient.prenom).toLowerCase();
     const searchText = search.toLowerCase();
     const matchSearch = fullName.includes(searchText);
 
 
-    // Filter by blood group
-    
+
     const bloodGroupe =
       !groupe || patient.groupeSanguin === groupe;
 
-    // Filter by age range
-    const matchAge =
-      !ageRange ||
-      (ageRange === "0-18" && age <= 18) ||
-      (ageRange === "19-40" && age >= 19 && age <= 40) ||
-      (ageRange === "41-60" && age >= 41 && age <= 60) ||
-      (ageRange === "60+" && age > 60);
+    let matchAge = true;
+
+    if (ageRange === "0-18") {
+      matchAge = age <= 18;
+    }
+
+    if (ageRange === "19-40") {
+      matchAge = age >= 19 && age <= 40;
+    }
+
+    if (ageRange === "41-60") {
+      matchAge = age >= 41 && age <= 60;
+    }
+
+    if (ageRange === "60+") {
+      matchAge = age > 60;
+    }
+
 
     return matchSearch && bloodGroupe && matchAge;
   });
@@ -55,7 +61,6 @@ export default function PatientsList() {
 
         <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
-        {/* ===== Filters ===== */}
         <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
 
           <input
@@ -95,7 +100,6 @@ export default function PatientsList() {
           </select>
         </div>
 
-        {/* ===== Add button ===== */}
         <div className="flex justify-center mt-10 mb-10">
           <Link
             to="/patients/ajouter"
@@ -105,7 +109,6 @@ export default function PatientsList() {
           </Link>
         </div>
 
-        {/* ===== Table ===== */}
         <div className="overflow-x-auto mt-10">
           {filteredPatients.length > 0 ? (
             <table className="w-full max-w-6xl mx-auto border shadow">
