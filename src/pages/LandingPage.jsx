@@ -173,7 +173,7 @@ export default function LandingPage() {
 
           <div data-aos="fade-down" className="bg-white p-6 rounded-xl shadow text-center">
             <img
-              src=""
+              src="public/WhatsApp Image 2025-12-23 at 22.58.05.jpeg"
               alt="abdelkabir"
               className="w-28 h-28 mx-auto rounded-full mb-4 object-cover"
             />

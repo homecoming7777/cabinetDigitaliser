@@ -7,6 +7,7 @@ import Consultations from "./pages/Consultations";
 import AjouterConsultation from "./pages/AjouterConsultation";
 import AjouterRdv from "./pages/AjouterRDV";
 import RendezVous from "./pages/RendezVous";
+import EditRendezVous from "./pages/EditRendezVous";
 import Dashboard from "./pages/Dashboard";
 
 
@@ -16,7 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/patients" element={<PatientsList />} />
         <Route path="/patients/ajouter" element={<PatientForm />} />
         <Route path="/patients/:id" element={<PatientDetails />} />
@@ -24,7 +25,7 @@ function App() {
         <Route path="/consultations/ajouter" element={<AjouterConsultation />} />
         <Route path="/rendez-vous" element={<RendezVous />} />
         <Route path="/rendez-vous/ajouter" element={<AjouterRdv />} />
-        <Route path="*" element={<LandingPage />} />
+        <Route path="/rendez-vous/modifier/:id" element={<EditRendezVous />} />
       </Routes>
     </Router>
   );

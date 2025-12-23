@@ -132,13 +132,16 @@ export default function RendezVous() {
                     {r.statut}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-6 py-4 flex justify-center gap-2 text-center">
                   <button
                     onClick={() => dispatch(deleteRdv(r.id))}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
                   >
                     Supprimer
                   </button>
+                  <Link to={`/rendez-vous/modifier/${r.id}`} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded">
+                    Modifier
+                  </Link>
                 </td>
               </tr>
             ))}
