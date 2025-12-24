@@ -38,7 +38,6 @@ export default function Consultations() {
           <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
 
-        {/* Filters */}
         <div className="flex justify-center gap-4 flex-wrap mt-6">
           <select onChange={(e) => setSelectedPatient(e.target.value)} className="border p-2 rounded">
             <option value="">Tous les patients</option>
@@ -59,13 +58,13 @@ export default function Consultations() {
           </Link>
         </div>
 
-        {/* MOBILE */}
         <div className="md:hidden space-y-4 mt-6">
           {filtered.map((c, i) => (
             <div key={c.id} className="bg-white p-4 rounded shadow">
               <h2 className="font-bold">{getPatientName(c.patient)}</h2>
               <p className="mt-2"><span className="font-bold">Date: </span>{c.date}</p>
               <p className="mt-2"><span className="font-bold">Motif:</span> {c.type}</p>
+              <p className="mt-2"><span className="font-bold">Motif:</span> {c.modePaiement}</p>
               <p className="mt-2"><span className="font-bold">Tarif:</span> {c.prix || "-"} MAD</p>
 
               <div className="flex justify-end gap-2 mt-3">
@@ -76,7 +75,6 @@ export default function Consultations() {
           ))}
         </div>
 
-        {/* DESKTOP */}
         <div className="hidden md:block mt-8 overflow-x-auto">
           <table className="w-full shadow rounded">
             <thead className="bg-[#2F404F] text-white">
