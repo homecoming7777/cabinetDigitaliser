@@ -12,6 +12,10 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 
 import { format } from "date-fns";
@@ -25,17 +29,17 @@ import {
 } from "react-icons/fa";
 
 export default function Dashboard() {
-
   /* ===== Init animations ===== */
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  /* ===== Get data from Redux ===== */
+  /* ===== Redux data ===== */
   const patients = useSelector((state) => state.patients);
   const consultations = useSelector((state) => state.consultations.list);
 
   const today = new Date();
+  const currentYear = today.getFullYear();
 
   /* ===== Filter consultations of current month ===== */
   const monthConsultations = consultations.filter((c) => {
@@ -60,16 +64,13 @@ export default function Dashboard() {
 
   /* ===== Count consultations per patient ===== */
   const consultationCount = {};
-
   monthConsultations.forEach((c) => {
-    consultationCount[c.patient] =
-      (consultationCount[c.patient] || 0) + 1;
+    consultationCount[c.patient] = (consultationCount[c.patient] || 0) + 1;
   });
 
   /* ===== Most frequent patient ===== */
   let mostFrequentPatient = null;
   let maxConsultations = 0;
-
   patients.forEach((p) => {
     const count = consultationCount[p.id] || 0;
     if (count > maxConsultations) {
@@ -78,11 +79,34 @@ export default function Dashboard() {
     }
   });
 
-  /* ===== Chart data ===== */
-  const revenueTimeline = monthConsultations.map((c) => ({
-    date: format(new Date(c.date), "dd MMM"),
-    revenue: Number(c.prix || 0),
+  /* ===== Revenue Trend Month-by-Month ===== */
+  const revenueTimeline = Array.from({ length: 12 }, (_, i) => {
+    const month = i;
+    const monthRevenue = consultations
+      .filter((c) => {
+        const date = new Date(c.date);
+        return date.getFullYear() === currentYear && date.getMonth() === month;
+      })
+      .reduce((sum, c) => sum + Number(c.prix || 0), 0);
+
+    return {
+      month: format(new Date(currentYear, i, 1), "MMM"),
+      revenue: monthRevenue,
+    };
+  });
+
+  /* ===== Consultation types for PieChart ===== */
+  const typeCount = {};
+  consultations.forEach((c) => {
+    typeCount[c.type] = (typeCount[c.type] || 0) + 1;
+  });
+
+  const pieData = Object.keys(typeCount).map((key) => ({
+    name: key,
+    value: typeCount[key],
   }));
+
+  const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#8dd1e1"];
 
   const cardStyle =
     "bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all";
@@ -90,9 +114,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-
       <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 p-6">
-
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,7 +125,6 @@ export default function Dashboard() {
 
         {/* ===== Stats cards ===== */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-
           <div className={cardStyle}>
             <FaUsers className="text-blue-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Total Patients</p>
@@ -113,9 +134,7 @@ export default function Dashboard() {
           <div className={cardStyle}>
             <FaStethoscope className="text-purple-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Consultations (Month)</p>
-            <p className="text-3xl font-bold">
-              {monthConsultations.length}
-            </p>
+            <p className="text-3xl font-bold">{monthConsultations.length}</p>
           </div>
 
           <div className={cardStyle}>
@@ -133,7 +152,6 @@ export default function Dashboard() {
           <div className={cardStyle}>
             <FaUserCheck className="text-pink-500 text-4xl mb-3" />
             <p className="text-sm text-gray-500">Most Frequent Patient</p>
-
             {mostFrequentPatient ? (
               <>
                 <p className="font-bold">
@@ -149,26 +167,57 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ===== Chart ===== */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">
-            Revenue Trend (This Month)
-          </h2>
+        {/* ===== Charts Section ===== */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Revenue Trend */}
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              Revenue Trend (Month by Month)
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={revenueTimeline}>
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip formatter={(value) => `${value} MAD`} />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10b981"
+                  fill="#10b981"
+                  fillOpacity={0.3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-          <ResponsiveContainer width="100%" height={320}>
-            <AreaChart data={revenueTimeline}>
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Area
-                type="monotone"
-                dataKey="revenue"
-                stroke="#10b981"
-                fill="#10b981"
-                fillOpacity={0.3}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          {/* Consultation Types Pie */}
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              Consultation Types Distribution
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  label
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </>

@@ -86,12 +86,12 @@ export default function EditRendezVous() {
               name="statut"
               value={form.statut}
               onChange={handleChange}
-              className="w-full p-2 rounded-lg border-2 border-white outline-0 text-white bg-[#2f404f]"
+              className="w-full p-2 rounded-lg border-2 border-white outline-0 text-white"
             >
-              <option value="En attente">En attente</option>
-              <option value="Confirmé">Confirmé</option>
-              <option value="Honoré">Honoré</option>
-              <option value="Annulé">Annulé</option>
+              <option className="text-black" value="En attente">En attente</option>
+              <option className="text-black" value="Confirmé">Confirmé</option>
+              <option className="text-black" value="Honoré">Honoré</option>
+              <option className="text-black" value="Annulé">Annulé</option>
             </select>
           </div>
 

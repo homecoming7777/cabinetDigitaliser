@@ -12,43 +12,47 @@ export default function PatientsList() {
   const [search, setSearch] = useState("");
   const [groupe, setGroupe] = useState("");
   const [ageRange, setAgeRange] = useState("");
+  const [deleteId, setDeleteId] = useState(null);
 
   const filteredPatients = patients.filter((patient) => {
     const age = calculateAge(patient.dateNaissance);
+    const fullName = `${patient.nom} ${patient.prenom}`.toLowerCase();
 
-    const fullName = (patient.nom + " " + patient.prenom).toLowerCase();
     const matchSearch = fullName.includes(search.toLowerCase());
-
-    const matchGroupe = !groupe || patient.groupeSanguin === groupe;
+    const matchGroup = !groupe || patient.groupeSanguin === groupe;
 
     let matchAge = true;
-
     if (ageRange === "0-18") matchAge = age <= 18;
     if (ageRange === "19-40") matchAge = age >= 19 && age <= 40;
     if (ageRange === "41-60") matchAge = age >= 41 && age <= 60;
     if (ageRange === "60+") matchAge = age > 60;
 
-    return matchSearch && matchGroupe && matchAge;
+    return matchSearch && matchGroup && matchAge;
   });
+
+  const confirmDelete = () => {
+    dispatch(deletePatient(deleteId));
+    setDeleteId(null);
+  };
 
   return (
     <>
       <Navbar />
 
-      <div className="px-4">
+      <div className="px-4 pb-10">
         <h1 className="text-center text-3xl md:text-5xl mt-6 font-extrabold text-[#2F404F]">
           Annuaire des patients
         </h1>
 
         <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
-        <div className="mt-10 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Filters */}
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <input
-            type="text"
             placeholder="Nom / Prénom"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border rounded px-4 py-2 outline-none"
+            className="border rounded px-4 py-2"
           />
 
           <select
@@ -57,14 +61,10 @@ export default function PatientsList() {
             className="border rounded px-4 py-2"
           >
             <option value="">Tous les groupes</option>
-            <option>A+</option>
-            <option>A-</option>
-            <option>B+</option>
-            <option>B-</option>
-            <option>AB+</option>
-            <option>AB-</option>
-            <option>O+</option>
-            <option>O-</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
           </select>
 
           <select
@@ -80,7 +80,7 @@ export default function PatientsList() {
           </select>
         </div>
 
-        <div className="flex justify-center mt-10 mb-10">
+        <div className="flex justify-center my-8">
           <Link
             to="/patients/ajouter"
             className="bg-[#2F404F] text-white px-6 py-3 rounded hover:scale-105 transition"
@@ -89,66 +89,79 @@ export default function PatientsList() {
           </Link>
         </div>
 
-        <div className="overflow-x-auto mt-10">
-          {filteredPatients.length > 0 ? (
-            <table className="w-full max-w-6xl mx-auto border shadow">
-              <thead className="bg-[#2F404F] text-white">
-                <tr>
-                  <th className="p-3 text-center">#</th>
-                  <th className="p-3 text-left">Nom</th>
-                  <th className="p-3">Âge</th>
-                  <th className="p-3">Téléphone</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Groupe</th>
-                  <th className="p-3 text-center">Action</th>
+        {/* DESKTOP TABLE */}
+        <div className="hidden md:block max-w-7xl mx-auto overflow-x-auto">
+          <table className="w-full rounded-xl shadow-lg overflow-hidden">
+            <thead className="bg-[#2F404F] text-white">
+              <tr>
+                <th>#</th><th>Nom</th><th>Âge</th>
+                <th>Téléphone</th><th>Email</th>
+                <th>Groupe</th><th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody className="bg-white">
+              {filteredPatients.map((p, i) => (
+                <tr key={p.id} className="border-b hover:bg-gray-50">
+                  <td className="text-center">{i + 1}</td>
+                  <td className="font-semibold">{p.nom} {p.prenom}</td>
+                  <td className="text-center">{calculateAge(p.dateNaissance)} ans</td>
+                  <td className="text-center">{p.telephone}</td>
+                  <td className="text-center">{p.email}</td>
+                  <td className="text-center">{p.groupeSanguin}</td>
+                  <td className="flex justify-center gap-2 py-2">
+                    <Link to={`/patients/${p.id}`} className="bg-blue-600 text-white px-3 py-1 rounded">Voir</Link>
+                    <button onClick={() => setDeleteId(p.id)} className="bg-red-600 text-white px-3 py-1 rounded">
+                      Supprimer
+                    </button>
+                  </td>
                 </tr>
-              </thead>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-              <tbody>
-                {filteredPatients.map((patient, index) => (
-                  <tr key={patient.id} className="border-t hover:bg-gray-50">
-                    <td className="p-3 text-center font-bold text-gray-500">
-                      {index + 1}
-                    </td>
+        {/* MOBILE CARDS */}
+        <div className="md:hidden space-y-4 mt-6">
+          {filteredPatients.map((p, i) => (
+            <div key={p.id} className="bg-white rounded-xl shadow p-4">
+              <div className="flex justify-between">
+                <h2 className="font-bold">{p.nom} {p.prenom}</h2>
+                <span className="text-gray-400">#{i + 1}</span>
+              </div>
 
-                    <td className="p-3 font-semibold">
-                      <Link
-                        to={`/patients/${patient.id}`}
-                        className="hover:underline"
-                      >
-                        {patient.nom} {patient.prenom}
-                      </Link>
-                    </td>
+              <p className="mt-2"><span className="font-bold">Âge:</span> {calculateAge(p.dateNaissance)} ans</p>
+              <p className="mt-2"><span className="font-bold">Tél:</span> {p.telephone}</p>
+              <p className="mt-2"><span className="font-bold">Email:</span> {p.email}</p>
+              <p className="mt-2"><span className="font-bold">Groupe:</span> {p.groupeSanguin}</p>
 
-                    <td className="p-3 text-center">
-                      {calculateAge(patient.dateNaissance)} ans
-                    </td>
-
-                    <td className="p-3 text-center">{patient.telephone}</td>
-                    <td className="p-3 text-center">{patient.email}</td>
-                    <td className="p-3 text-center">
-                      {patient.groupeSanguin}
-                    </td>
-
-                    <td className="p-3 text-center">
-                      <button
-                        onClick={() => dispatch(deletePatient(patient.id))}
-                        className="text-white bg-red-500 px-3 rounded font-bold py-2 hover:scale-105"
-                      >
-                        supprimer
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-center mt-10 text-gray-400 text-3xl font-bold">
-              Aucun patient trouvé
-            </p>
-          )}
+              <div className="flex justify-end gap-2 mt-3">
+                <Link to={`/patients/${p.id}`} className="bg-blue-600 text-white px-4 py-1 rounded">Voir</Link>
+                <button onClick={() => setDeleteId(p.id)} className="bg-red-600 text-white px-4 py-1 rounded">
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* CONFIRM MODAL */}
+      {deleteId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-80 text-center">
+            <h2 className="font-bold mb-4">Supprimer ce patient ?</h2>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => setDeleteId(null)} className="px-4 py-2 border rounded">
+                Annuler
+              </button>
+              <button onClick={confirmDelete} className="px-4 py-2 bg-red-600 text-white rounded">
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
