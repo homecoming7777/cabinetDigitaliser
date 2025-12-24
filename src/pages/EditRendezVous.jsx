@@ -9,16 +9,10 @@ export default function EditRendezVous() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  /* =====================
-     GET RDV FROM STORE
-  ====================== */
   const rdv = useSelector(state =>
     state.rdv.list.find(r => r.id === Number(id))
   );
 
-  /* =====================
-     SAFETY CHECK
-  ====================== */
   if (!rdv) {
     return (
       <>
@@ -30,9 +24,6 @@ export default function EditRendezVous() {
     );
   }
 
-  /* =====================
-     LOCAL FORM STATE
-  ====================== */
   const [form, setForm] = useState({
     date: rdv.date,
     heure: rdv.heure,
@@ -65,7 +56,6 @@ export default function EditRendezVous() {
           onSubmit={handleSubmit}
           className="bg-[#2f404f9d] mt-10 mb-10 rounded-lg p-6 space-y-6 shadow-2xl"
         >
-          {/* DATE */}
           <div>
             <label className="block text-white mb-1">Date</label>
             <input
@@ -78,7 +68,6 @@ export default function EditRendezVous() {
             />
           </div>
 
-          {/* TIME */}
           <div>
             <label className="block text-white mb-1">Heure</label>
             <input
@@ -91,7 +80,6 @@ export default function EditRendezVous() {
             />
           </div>
 
-          {/* STATUS */}
           <div>
             <label className="block text-white mb-1">Statut</label>
             <select
@@ -107,7 +95,6 @@ export default function EditRendezVous() {
             </select>
           </div>
 
-          {/* ACTIONS */}
           <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"

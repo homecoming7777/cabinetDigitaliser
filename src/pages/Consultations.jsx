@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { deleteConsultation } from "../Slices/ConsultationSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
 
@@ -8,7 +8,6 @@ export default function Consultations() {
   const consultations = useSelector((state) => state.consultations.list);
   const patients = useSelector((state) => state.patients);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [selectedPatient, setSelectedPatient] = useState("");
   const [selectedMotif, setSelectedMotif] = useState("");
@@ -23,9 +22,7 @@ export default function Consultations() {
       ? c.patient === Number(selectedPatient)
       : true;
 
-    const matchMotif = selectedMotif
-      ? c.type === selectedMotif
-      : true;
+    const matchMotif = selectedMotif ? c.type === selectedMotif : true;
 
     return matchPatient && matchMotif;
   });
@@ -34,16 +31,16 @@ export default function Consultations() {
     <div className="mb-10">
       <Navbar />
 
-      <h1 className="text-center capitalize text-2xl sm:text-4xl md:text-5xl lg:text-5xl mt-5 font-extrabold text-[#2F404F]">
+      <h1 className="text-center text-4xl mt-5 font-extrabold text-[#2F404F]">
         Liste des Consultations
       </h1>
 
-      <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
+      <div className="p-0.5 w-full bg-[#3894A1] my-4"></div>
 
       <div className="flex justify-center mt-8 gap-4 flex-wrap">
         <Link
           to="/consultations/ajouter"
-          className="inline-flex h-12 items-center justify-center rounded-md bg-[#2F404F] px-6 font-medium text-neutral-50 transition hover:scale-105"
+          className="bg-[#2F404F] text-white px-6 py-2 rounded hover:scale-105"
         >
           + Ajouter une consultation
         </Link>
@@ -51,7 +48,7 @@ export default function Consultations() {
         <select
           value={selectedPatient}
           onChange={(e) => setSelectedPatient(e.target.value)}
-          className="border-2 rounded-lg p-2 text-[#2F404F]"
+          className="border rounded-lg p-2"
         >
           <option value="">Tous les patients</option>
           {patients.map((p) => (
@@ -64,7 +61,7 @@ export default function Consultations() {
         <select
           value={selectedMotif}
           onChange={(e) => setSelectedMotif(e.target.value)}
-          className="border-2 rounded-lg p-2 text-[#2F404F]"
+          className="border rounded-lg p-2"
         >
           <option value="">Tous les motifs</option>
           <option value="Consultation">Consultation</option>
@@ -74,66 +71,50 @@ export default function Consultations() {
       </div>
 
       <div className="max-w-7xl mx-auto mt-10 px-4 overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <table className="min-w-full bg-white rounded shadow">
           <thead className="bg-[#2F404F] text-white">
             <tr>
-              <th className="px-6 py-3 text-center">#</th>
-              <th className="px-6 py-3 text-left">Date</th>
-              <th className="px-6 py-3 text-left">Patient</th>
-              <th className="px-6 py-3 text-left">Motif</th>
-              <th className="px-6 py-3 text-left">Diagnostic</th>
-              <th className="px-6 py-3 text-left">Ordonnance</th>
-              <th className="px-6 py-3 text-left">Tarif (MAD)</th>
-              <th className="px-6 py-3 text-left">Mode paiement</th>
-              <th className="px-6 py-3 text-center">Historique</th>
-              <th className="px-6 py-3 text-center">Action</th>
+              <th className="p-3">#</th>
+              <th>Date</th>
+              <th>Patient</th>
+              <th>Motif</th>
+              <th>Diagnostic</th>
+              <th>Tarif</th>
+              <th>Paiement</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredConsultations.length === 0 && (
               <tr>
-                <td colSpan="10" className="text-center py-6 text-gray-500">
+                <td colSpan="8" className="text-center py-6 text-gray-500">
                   Aucune consultation trouvée
                 </td>
               </tr>
             )}
 
             {filteredConsultations.map((c, index) => (
-              <tr key={c.id} className="border-b hover:bg-gray-50 transition">
-                <td className="px-6 py-4 text-center font-bold text-gray-500">
-                  {index + 1}
-                </td>
+              <tr key={c.id} className="border-b text-center">
+                <td>{index + 1}</td>
+                <td>{c.date}</td>
+                <td>{getPatientName(c.patient)}</td>
+                <td>{c.type}</td>
+                <td>{c.diagnostic}</td>
+                <td>{c.prix || "-"} MAD</td>
+                <td>{c.modePaiement || "-"}</td>
 
-                <td className="px-6 py-4 font-medium">{c.date}</td>
-                <td className="px-6 py-4 text-center">
-                  {getPatientName(c.patient)}
-                </td>
-                <td className="px-6 py-4 text-center">{c.type}</td>
-                <td className="px-6 py-4 text-center">{c.diagnostic}</td>
-                <td className="px-6 py-4 text-center">
-                  {c.ordonnance || "-"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {c.prix ? `${c.prix} MAD` : "-"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {c.modePaiement || "-"}
-                </td>
-
-                <td className="px-6 py-4 text-center">
-                  <button
-                    onClick={() => navigate(`/patients/${c.patient}`)}
-                    className="text-blue-600 hover:underline"
+                <td className="flex justify-center gap-2 py-2">
+                  <Link
+                    to={`/edit-consultation/${c.id}`}
+                    className="bg-blue-600 text-white px-3 py-1 rounded"
                   >
-                    Voir
-                  </button>
-                </td>
+                    Modifier
+                  </Link>
 
-                <td className="px-6 py-4 text-center">
                   <button
                     onClick={() => dispatch(deleteConsultation(c.id))}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded transition"
+                    className="bg-red-600 text-white px-3 py-1 rounded"
                   >
                     Supprimer
                   </button>

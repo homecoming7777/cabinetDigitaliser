@@ -9,6 +9,7 @@ import AjouterRdv from "./pages/AjouterRDV";
 import RendezVous from "./pages/RendezVous";
 import EditRendezVous from "./pages/EditRendezVous";
 import Dashboard from "./pages/Dashboard";
+import EditConsultation from "./pages/EditConsultation";
 
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/patients/:id" element={<PatientDetails />} />
         <Route path="/consultations" element={<Consultations />} />
         <Route path="/consultations/ajouter" element={<AjouterConsultation />} />
+        <Route path="/edit-consultation/:id" element={<EditConsultation />} />
         <Route path="/rendez-vous" element={<RendezVous />} />
         <Route path="/rendez-vous/ajouter" element={<AjouterRdv />} />
         <Route path="/rendez-vous/modifier/:id" element={<EditRendezVous />} />
