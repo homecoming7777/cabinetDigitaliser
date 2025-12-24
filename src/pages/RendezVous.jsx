@@ -50,7 +50,6 @@ export default function RendezVous() {
 
         <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
-        {/* Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <select
@@ -100,7 +99,6 @@ export default function RendezVous() {
           </div>
         </div>
 
-        {/* MOBILE CARDS */}
         <div className="md:hidden mt-6 space-y-4">
           {filtered.map((r, i) => (
             <div key={r.id} className="bg-white rounded-xl shadow p-4 animate-fadeIn">
@@ -122,7 +120,6 @@ export default function RendezVous() {
           ))}
         </div>
 
-        {/* DESKTOP TABLE */}
         <div className="hidden md:block max-w-6xl mx-auto mt-6 overflow-x-auto">
           <table className="min-w-full text-center bg-white rounded-lg shadow-lg overflow-hidden">
             <thead className="bg-[#2F404F] text-white">
@@ -161,7 +158,6 @@ export default function RendezVous() {
 
       </div>
 
-      {/* CONFIRM MODAL */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 w-80 text-center animate-fadeIn">

@@ -46,7 +46,6 @@ export default function PatientsList() {
 
         <div className="p-0.5 w-full bg-gradient-to-r from-transparent via-[#3894A1] to-transparent my-4"></div>
 
-        {/* Filters */}
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <input
             placeholder="Nom / Prénom"
@@ -89,7 +88,6 @@ export default function PatientsList() {
           </Link>
         </div>
 
-        {/* DESKTOP TABLE */}
         <div className="hidden md:block max-w-7xl mx-auto overflow-x-auto">
           <table className="w-full rounded-xl shadow-lg overflow-hidden">
             <thead className="bg-[#2F404F] text-white">
@@ -121,7 +119,6 @@ export default function PatientsList() {
           </table>
         </div>
 
-        {/* MOBILE CARDS */}
         <div className="md:hidden space-y-4 mt-6">
           {filteredPatients.map((p, i) => (
             <div key={p.id} className="bg-white rounded-xl shadow p-4">
@@ -146,7 +143,6 @@ export default function PatientsList() {
         </div>
       </div>
 
-      {/* CONFIRM MODAL */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 w-80 text-center">

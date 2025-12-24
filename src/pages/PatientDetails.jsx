@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { calculateAge } from "../Slices/calculateAge";
+import Navbar from "../components/Navbar";
 import {
   FaPhone,
   FaEnvelope,
@@ -10,7 +11,6 @@ import {
   FaUserMd,
 } from "react-icons/fa";
 
-import Navbar from "../components/Navbar";
 
 
 

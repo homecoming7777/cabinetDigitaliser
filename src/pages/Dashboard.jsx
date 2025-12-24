@@ -29,19 +29,16 @@ import {
 } from "react-icons/fa";
 
 export default function Dashboard() {
-  /* ===== Init animations ===== */
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
-  /* ===== Redux data ===== */
   const patients = useSelector((state) => state.patients);
   const consultations = useSelector((state) => state.consultations.list);
 
   const today = new Date();
   const currentYear = today.getFullYear();
 
-  /* ===== Filter consultations of current month ===== */
   const monthConsultations = consultations.filter((c) => {
     const date = new Date(c.date);
     return (
@@ -50,25 +47,21 @@ export default function Dashboard() {
     );
   });
 
-  /* ===== Monthly revenue ===== */
   const monthRevenue = monthConsultations.reduce(
     (total, c) => total + Number(c.prix || 0),
     0
   );
 
-  /* ===== Average revenue ===== */
   const avgRevenue =
     monthConsultations.length > 0
       ? Math.round(monthRevenue / monthConsultations.length)
       : 0;
 
-  /* ===== Count consultations per patient ===== */
   const consultationCount = {};
   monthConsultations.forEach((c) => {
     consultationCount[c.patient] = (consultationCount[c.patient] || 0) + 1;
   });
 
-  /* ===== Most frequent patient ===== */
   let mostFrequentPatient = null;
   let maxConsultations = 0;
   patients.forEach((p) => {
@@ -79,7 +72,6 @@ export default function Dashboard() {
     }
   });
 
-  /* ===== Revenue Trend Month-by-Month ===== */
   const revenueTimeline = Array.from({ length: 12 }, (_, i) => {
     const month = i;
     const monthRevenue = consultations
@@ -95,7 +87,6 @@ export default function Dashboard() {
     };
   });
 
-  /* ===== Consultation types for PieChart ===== */
   const typeCount = {};
   consultations.forEach((c) => {
     typeCount[c.type] = (typeCount[c.type] || 0) + 1;
@@ -123,7 +114,6 @@ export default function Dashboard() {
           Clinic Performance Dashboard
         </motion.h1>
 
-        {/* ===== Stats cards ===== */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
           <div className={cardStyle}>
             <FaUsers className="text-blue-500 text-4xl mb-3" />
@@ -167,9 +157,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ===== Charts Section ===== */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Revenue Trend */}
           <div className="bg-white rounded-2xl p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">
               Revenue Trend (Month by Month)
@@ -190,7 +178,6 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
 
-          {/* Consultation Types Pie */}
           <div className="bg-white rounded-2xl p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">
               Consultation Types Distribution
